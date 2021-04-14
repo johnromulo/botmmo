@@ -78,6 +78,12 @@ async function run() {
     SPEED_STEPS,
     async () => await customKeyTap(config.teleport_key)
   );
+
+  await sleep(4);
+  await repeat(6, SPEED_STEPS, async () => await customKeyTap("q"));
+
+  await sleep(4);
+  await run();
 }
 
 run();
