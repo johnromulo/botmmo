@@ -26,7 +26,7 @@ const config = {
   sweet_scent_key: "5",
   teleport_key: "6",
   speed_steps: 0.2,
-  sweet_scent_amount_use: 5,
+  sweet_scent_amount_use: 6,
 };
 
 const SPEED_STEPS = config.speed_steps;
@@ -53,7 +53,7 @@ async function run() {
   console.log("entrando na caverna");
   await sleep(2);
 
-  const arr = Array.from(Array(config.sweet_scent_key).keys());
+  const arr = Array.from(Array(config.sweet_scent_amount_use).keys());
   for (let num of arr) {
     console.log("usando sweet scent");
     await repeat(
@@ -61,16 +61,23 @@ async function run() {
       SPEED_STEPS,
       async () => await customKeyTap(config.sweet_scent_key)
     );
-    await sleep(12);
+    await sleep(14);
     console.log("atk");
     await repeat(1, SPEED_STEPS, async () => await customKeyTap("q"));
     await repeat(1, SPEED_STEPS, async () => await customKeyTap("d"));
     await repeat(2, SPEED_STEPS, async () => await customKeyTap("q"));
-    await sleep(13);
-    console.log("saindo da caverna");
-    await repeat(2, SPEED_STEPS, async () => await customKeyTap("s"));
-    await sleep(2);
+    await sleep(14);
+
+    console.log("skipando novo atk");
+    await repeat(1, SPEED_STEPS, async () => await customKeyTap("e"));
+    await sleep(3);
+    await repeat(1, SPEED_STEPS, async () => await customKeyTap("q"));
+    await sleep(8);
   }
+
+  console.log("saindo da caverna");
+  await repeat(2, SPEED_STEPS, async () => await customKeyTap("s"));
+  await sleep(2);
 
   console.log("teleportando para o centro");
   await repeat(
@@ -79,10 +86,11 @@ async function run() {
     async () => await customKeyTap(config.teleport_key)
   );
 
-  await sleep(4);
-  await repeat(6, SPEED_STEPS, async () => await customKeyTap("q"));
+  await sleep(5);
+  console.log("curando");
+  await repeat(7, 1.5, async () => await customKeyTap("q"));
 
-  await sleep(4);
+  await sleep(1);
   await run();
 }
 
