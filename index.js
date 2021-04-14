@@ -23,7 +23,6 @@ async function move(direction) {
   robot.keyToggle(direction, "up");
 }
 
-// 0.07
 const SPEED_STEPS = 0.2;
 
 async function run() {
