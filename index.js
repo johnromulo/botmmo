@@ -61,7 +61,7 @@ async function run() {
       SPEED_STEPS,
       async () => await customKeyTap(config.sweet_scent_key)
     );
-    await sleep(14);
+    await sleep(16);
     console.log("atk");
     await repeat(1, SPEED_STEPS, async () => await customKeyTap("q"));
     await repeat(1, SPEED_STEPS, async () => await customKeyTap("d"));
