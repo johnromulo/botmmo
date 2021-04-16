@@ -79,12 +79,12 @@ async function battle() {
   console.log("entrando na batalha");
   await sleep(9);
   await repeat(6, SPEED_STEPS, async () => await customKeyTap("a"));
-  await sleep(2);
+  // await sleep(2);
   await repeat(6, SPEED_STEPS, async () => await customKeyTap("w"));
   const isHorda = await checkHorda();
   if (isHorda) {
     await repeat(6, SPEED_STEPS, async () => await customKeyTap("d"));
-    await sleep(2);
+    // await sleep(2);
     await repeat(6, SPEED_STEPS, async () => await customKeyTap("s"));
     await repeat(2, SPEED_STEPS, async () => await customKeyTap("q"));
     await sleep(8);
@@ -114,6 +114,7 @@ async function battle() {
 }
 
 async function goToCenter() {
+  notFoundPokemon = 0;
   console.log("teleportando para o centro pokemon");
   await repeat(
     1,
@@ -133,35 +134,41 @@ async function resetRoute() {
   console.log("resetando rota");
   await repeat(6, SPEED_STEPS, async () => await customKeyTap("s"));
   await repeat(6, SPEED_STEPS, async () => await customKeyTap("d"));
-  await sleep(4);
+  // await sleep(2.5);
 }
 
+let notFoundPokemon = 0;
 async function route() {
   console.log("seguindo rota");
-  await repeat(4, SPEED_STEPS, async () => await customKeyTap("w"));
-  await repeat(2, SPEED_STEPS, async () => await customKeyTap("a"));
-  await repeat(3, SPEED_STEPS, async () => await customKeyTap("s"));
-  await repeat(5, SPEED_STEPS, async () => await customKeyTap("a"));
-  await repeat(2, SPEED_STEPS, async () => await customKeyTap("s"));
-  await repeat(6, SPEED_STEPS, async () => await customKeyTap("d"));
-
-  const isbattle = await checkbattle();
-  if (isbattle) {
-    await battle();
+  if (notFoundPokemon >= 6) {
+    console.log("pokemon não encontrado");
+    await goToCenter();
   } else {
-    await route();
+    await repeat(4, SPEED_STEPS, async () => await customKeyTap("w"));
+    await repeat(2, SPEED_STEPS, async () => await customKeyTap("a"));
+    await repeat(3, SPEED_STEPS, async () => await customKeyTap("s"));
+    await repeat(5, SPEED_STEPS, async () => await customKeyTap("a"));
+    await repeat(2, SPEED_STEPS, async () => await customKeyTap("s"));
+    await repeat(6, SPEED_STEPS, async () => await customKeyTap("d"));
+
+    const isbattle = await checkbattle();
+    if (isbattle) {
+      notFoundPokemon = 0;
+      await battle();
+    } else {
+      notFoundPokemon++;
+      console.log("rotas sem encontrar pokemon:", notFoundPokemon);
+      await route();
+    }
   }
 }
 
 async function run() {
-  console.log("Coloque o pokemmo em foco");
-  await sleep(5);
   console.log("iniciando");
-
   await repeat(6, SPEED_STEPS, async () => await customKeyTap("s"));
   console.log("saindo do centro");
   await sleep(2);
-  console.log("segingo para rota de farm");
+  console.log("seguindo para rota de farm");
 
   // await repeat(7, SPEED_STEPS, async () => await customKeyTap("a"));
   // await repeat(5, SPEED_STEPS, async () => await customKeyTap("w"));
@@ -195,12 +202,11 @@ async function run() {
   await route();
 }
 
-run();
+async function main() {
+  console.log("Coloque o pokemmo em foco");
+  await sleep(5);
+  await run();
+}
 
+main();
 // 14 p/s
-
-/*
-  1s = 14
-  x = 4
-  x= 4/14; 
-*/
