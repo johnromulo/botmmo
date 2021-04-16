@@ -1,5 +1,4 @@
 const os = require("os");
-const macSetWindowFocus = require("./macSetWindowFocus");
 
 async function setWindowFocus() {
   return new Promise(async (resolve, reject) => {
@@ -8,6 +7,7 @@ async function setWindowFocus() {
       resolve(false);
     } else if (os.type() === "Darwin") {
       console.log("Mac");
+      const macSetWindowFocus = require("./macSetWindowFocus");
       const macReturn = await macSetWindowFocus();
       resolve(macReturn);
     } else if (os.type() === "Windows_NT") {

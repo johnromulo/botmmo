@@ -1,0 +1,22 @@
+{
+  "keys": {
+    "sweet_scent": "5",
+    "teleport": "6",
+    "fly": "",
+    "rod": "",
+    "bike": "1",
+    "print_screen": "0",
+    "up": "w",
+    "left": "a",
+    "down": "s",
+    "right": "d",
+    "button_z": "q",
+    "button_b": "e"
+  },
+  "amount_uses": {
+    "sweet_scent": 6,
+    "pp": 32
+  },
+  "speed_prees_button": 0.05,
+  "screen_shot_folder": "../../../../Pictures/PokeMMO Screenshots"
+}

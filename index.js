@@ -35,21 +35,65 @@ async function run() {
   console.log("Coloque o pokemmo em foco");
   await sleep(3);
   console.log("iniciando");
-  await repeat(5, SPEED_STEPS, async () => await customKeyTap("s"));
-  await repeat(3, SPEED_STEPS, async () => await customKeyTap("a"));
-  await repeat(2, SPEED_STEPS, async () => await customKeyTap("s"));
+  await repeat(
+    5,
+    SPEED_STEPS,
+    async () => await customKeyTap(configs.keys.down)
+  );
+  await repeat(
+    3,
+    SPEED_STEPS,
+    async () => await customKeyTap(configs.keys.left)
+  );
+  await repeat(
+    2,
+    SPEED_STEPS,
+    async () => await customKeyTap(configs.keys.down)
+  );
   console.log("saindo do centro");
   await sleep(2);
 
-  await repeat(15, SPEED_STEPS, async () => await customKeyTap("s"));
-  await repeat(5, SPEED_STEPS, async () => await customKeyTap("d"));
-  await repeat(10, SPEED_STEPS, async () => await customKeyTap("s"));
-  await repeat(2, SPEED_STEPS, async () => await customKeyTap("d"));
-  await repeat(9, SPEED_STEPS, async () => await customKeyTap("s"));
-  await repeat(6, SPEED_STEPS, async () => await customKeyTap("d"));
-  await repeat(11, SPEED_STEPS, async () => await customKeyTap("s"));
-  await repeat(4, SPEED_STEPS, async () => await customKeyTap("a"));
-  await repeat(2, SPEED_STEPS, async () => await customKeyTap("w"));
+  await repeat(
+    15,
+    SPEED_STEPS,
+    async () => await customKeyTap(configs.keys.down)
+  );
+  await repeat(
+    5,
+    SPEED_STEPS,
+    async () => await customKeyTap(configs.keys.right)
+  );
+  await repeat(
+    10,
+    SPEED_STEPS,
+    async () => await customKeyTap(configs.keys.down)
+  );
+  await repeat(
+    2,
+    SPEED_STEPS,
+    async () => await customKeyTap(configs.keys.right)
+  );
+  await repeat(
+    9,
+    SPEED_STEPS,
+    async () => await customKeyTap(configs.keys.down)
+  );
+  await repeat(
+    6,
+    SPEED_STEPS,
+    async () => await customKeyTap(configs.keys.right)
+  );
+  await repeat(
+    11,
+    SPEED_STEPS,
+    async () => await customKeyTap(configs.keys.down)
+  );
+  await repeat(
+    4,
+    SPEED_STEPS,
+    async () => await customKeyTap(configs.keys.left)
+  );
+  await repeat(2, SPEED_STEPS, async () => await customKeyTap(configs.keys.up));
   console.log("entrando na caverna");
   await sleep(2);
 
@@ -63,20 +107,44 @@ async function run() {
     );
     await sleep(16);
     console.log("atk");
-    await repeat(1, SPEED_STEPS, async () => await customKeyTap("q"));
-    await repeat(1, SPEED_STEPS, async () => await customKeyTap("d"));
-    await repeat(2, SPEED_STEPS, async () => await customKeyTap("q"));
+    await repeat(
+      1,
+      SPEED_STEPS,
+      async () => await customKeyTap(configs.keys.button_z)
+    );
+    await repeat(
+      1,
+      SPEED_STEPS,
+      async () => await customKeyTap(configs.keys.right)
+    );
+    await repeat(
+      2,
+      SPEED_STEPS,
+      async () => await customKeyTap(configs.keys.button_z)
+    );
     await sleep(14);
 
     console.log("skipando novo atk");
-    await repeat(1, SPEED_STEPS, async () => await customKeyTap("e"));
+    await repeat(
+      1,
+      SPEED_STEPS,
+      async () => await customKeyTap(configs.keys.button_b)
+    );
     await sleep(3);
-    await repeat(1, SPEED_STEPS, async () => await customKeyTap("q"));
+    await repeat(
+      1,
+      SPEED_STEPS,
+      async () => await customKeyTap(configs.keys.button_z)
+    );
     await sleep(8);
   }
 
   console.log("saindo da caverna");
-  await repeat(2, SPEED_STEPS, async () => await customKeyTap("s"));
+  await repeat(
+    2,
+    SPEED_STEPS,
+    async () => await customKeyTap(configs.keys.down)
+  );
   await sleep(2);
 
   console.log("teleportando para o centro");
@@ -88,7 +156,7 @@ async function run() {
 
   await sleep(5);
   console.log("curando");
-  await repeat(7, 1.5, async () => await customKeyTap("q"));
+  await repeat(7, 1.5, async () => await customKeyTap(configs.keys.button_z));
 
   await sleep(1);
   await run();

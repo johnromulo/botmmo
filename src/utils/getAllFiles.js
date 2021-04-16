@@ -1,5 +1,7 @@
 const fs = require("fs");
-const url = "../../../../Pictures/PokeMMO Screenshots";
+const configs = require("../../config.json");
+
+const url = configs.screen_shot_folder;
 
 async function getAllFiles() {
   return new Promise((resolve, reject) => {

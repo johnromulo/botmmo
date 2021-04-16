@@ -1,8 +1,10 @@
 const { createCanvas, loadImage } = require("canvas");
-const url = "../../../../Pictures/PokeMMO Screenshots/";
+const configs = require("../../config.json");
+
+const url = configs.screen_shot_folder;
 
 async function checkColorPixel(file, coordinates) {
-  const img = await loadImage(`${url}${file}`);
+  const img = await loadImage(`${url}/${file}`);
   return new Promise((resolve, reject) => {
     const canvas = createCanvas(1024, 768);
     canvas.width = 1024;

@@ -1,7 +1,8 @@
 const fs = require("fs");
 const path = require("path");
+const configs = require("../../config.json");
 
-const url = "../../../../Pictures/PokeMMO Screenshots";
+const url = configs.screen_shot_folder;
 
 async function excludeScreenShots(files) {
   return new Promise((resolve, reject) => {

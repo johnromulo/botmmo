@@ -6,19 +6,20 @@ const getAllFiles = require("./src/utils/getAllFiles");
 const excludeScreenShots = require("./src/utils/excludeScreenShots");
 const checkColorPixel = require("./src/utils/checkColorPixel");
 const setWindowFocus = require("./src/utils/setWindowFocus");
+const configs = require("./config.json");
 
-const config = {
-  sweet_scent_key: "5",
-  teleport_key: "6",
-  bike_key: "1",
-  print_key: "0",
-  speed_steps: 0.2,
-  sweet_scent_amount_use: 6,
-  pp: 32,
-};
+// const config = {
+//   sweet_scent_key: "5",
+//   teleport_key: "6",
+//   bike_key: "1",
+//   print_key: "0",
+//   speed_steps: 0.2,
+//   sweet_scent_amount_use: 6,
+//   pp: 32,
+// };
 
-const SPEED_STEPS = config.speed_steps;
-let pp = config.pp;
+const SPEED_PRESS = configs.speed_prees_button;
+let pp = configs.amount_uses.pp;
 
 async function checkbattle() {
   return new Promise(async (resolve, reject) => {
@@ -30,8 +31,8 @@ async function checkbattle() {
     console.log("print checkbattle");
     await repeat(
       1,
-      SPEED_STEPS,
-      async () => await customKeyTap(config.print_key)
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.print_screen)
     );
 
     const files = await getAllFiles();
@@ -57,8 +58,8 @@ async function checkHorda() {
     console.log("print checkHorda");
     await repeat(
       1,
-      SPEED_STEPS,
-      async () => await customKeyTap(config.print_key)
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.print_screen)
     );
 
     const files = await getAllFiles();
@@ -77,26 +78,58 @@ async function checkHorda() {
 async function battle() {
   console.log("entrando na batalha");
   await sleep(5.5);
-  await repeat(4, SPEED_STEPS, async () => await customKeyTap("a"));
-  await repeat(4, SPEED_STEPS, async () => await customKeyTap("w"));
+  await repeat(
+    4,
+    SPEED_PRESS,
+    async () => await customKeyTap(configs.keys.left)
+  );
+  await repeat(4, SPEED_PRESS, async () => await customKeyTap(configs.keys.up));
   const isHorda = await checkHorda();
   if (isHorda) {
-    await repeat(4, SPEED_STEPS, async () => await customKeyTap("d"));
-    await repeat(4, SPEED_STEPS, async () => await customKeyTap("s"));
-    await repeat(2, SPEED_STEPS, async () => await customKeyTap("q"));
+    await repeat(
+      4,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.right)
+    );
+    await repeat(
+      4,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.down)
+    );
+    await repeat(
+      2,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.button_z)
+    );
     await sleep(8);
     await goToCenter();
   }
   console.log("atk");
-  await repeat(2, SPEED_STEPS, async () => await customKeyTap("q"));
+  await repeat(
+    2,
+    SPEED_PRESS,
+    async () => await customKeyTap(configs.keys.button_z)
+  );
   await sleep(12);
   const isbattle = await checkbattle();
   if (isbattle) {
     await sleep(8);
     console.log("atk 2");
-    await repeat(1, SPEED_STEPS, async () => await customKeyTap("q"));
-    await repeat(1, SPEED_STEPS, async () => await customKeyTap("s"));
-    await repeat(1, SPEED_STEPS, async () => await customKeyTap("s"));
+    await repeat(
+      1,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.button_z)
+    );
+    await repeat(
+      1,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.down)
+    );
+    await repeat(
+      1,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.down)
+    );
     await sleep(12);
   }
   console.log("saindo da batalha");
@@ -115,22 +148,30 @@ async function goToCenter() {
   console.log("teleportando para o centro pokemon");
   await repeat(
     1,
-    SPEED_STEPS,
-    async () => await customKeyTap(config.teleport_key)
+    SPEED_PRESS,
+    async () => await customKeyTap(configs.keys.teleport)
   );
 
   await sleep(5);
   console.log("curando");
-  await repeat(7, 1.5, async () => await customKeyTap("q"));
-  pp = config.pp;
+  await repeat(7, 1.5, async () => await customKeyTap(configs.keys.button_z));
+  pp = configs.amount_uses.pp;
   await sleep(1);
   await run();
 }
 
 async function resetRoute() {
   console.log("resetando rota");
-  await repeat(6, SPEED_STEPS, async () => await customKeyTap("s"));
-  await repeat(6, SPEED_STEPS, async () => await customKeyTap("d"));
+  await repeat(
+    6,
+    SPEED_PRESS,
+    async () => await customKeyTap(configs.keys.down)
+  );
+  await repeat(
+    6,
+    SPEED_PRESS,
+    async () => await customKeyTap(configs.keys.right)
+  );
 }
 
 let notFoundPokemon = 0;
@@ -140,12 +181,36 @@ async function route() {
     console.log("pokemon não encontrado");
     await goToCenter();
   } else {
-    await repeat(4, SPEED_STEPS, async () => await customKeyTap("w"));
-    await repeat(2, SPEED_STEPS, async () => await customKeyTap("a"));
-    await repeat(3, SPEED_STEPS, async () => await customKeyTap("s"));
-    await repeat(5, SPEED_STEPS, async () => await customKeyTap("a"));
-    await repeat(2, SPEED_STEPS, async () => await customKeyTap("s"));
-    await repeat(6, SPEED_STEPS, async () => await customKeyTap("d"));
+    await repeat(
+      4,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.up)
+    );
+    await repeat(
+      2,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.left)
+    );
+    await repeat(
+      3,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.down)
+    );
+    await repeat(
+      5,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.left)
+    );
+    await repeat(
+      2,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.down)
+    );
+    await repeat(
+      6,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.right)
+    );
 
     const isbattle = await checkbattle();
     if (isbattle) {
@@ -161,33 +226,57 @@ async function route() {
 
 async function run() {
   console.log("iniciando");
-  await repeat(6, SPEED_STEPS, async () => await customKeyTap("s"));
+  await repeat(
+    6,
+    SPEED_PRESS,
+    async () => await customKeyTap(configs.keys.down)
+  );
   console.log("saindo do centro");
   await sleep(2);
   console.log("seguindo para rota de farm");
 
-  // await repeat(7, SPEED_STEPS, async () => await customKeyTap("a"));
-  // await repeat(5, SPEED_STEPS, async () => await customKeyTap("w"));
-  // await repeat(2, SPEED_STEPS, async () => await customKeyTap("d"));
-  // await repeat(15, SPEED_STEPS, async () => await customKeyTap("w"));
-  // await repeat(17, SPEED_STEPS, async () => await customKeyTap("a"));
-  // await repeat(3, SPEED_STEPS, async () => await customKeyTap("w"));
-  // await repeat(6, SPEED_STEPS, async () => await customKeyTap("a"));
-  // await repeat(4, SPEED_STEPS, async () => await customKeyTap("s"));
-  await repeat(1, SPEED_STEPS, async () => await customKeyTap(config.bike_key));
+  // await repeat(7, SPEED_PRESS, async () => await customKeyTap(configs.keys.left));
+  // await repeat(5, SPEED_PRESS, async () => await customKeyTap(configs.keys.up));
+  // await repeat(2, SPEED_PRESS, async () => await customKeyTap(configs.keys.right));
+  // await repeat(15, SPEED_PRESS, async () => await customKeyTap(configs.keys.up));
+  // await repeat(17, SPEED_PRESS, async () => await customKeyTap(configs.keys.left));
+  // await repeat(3, SPEED_PRESS, async () => await customKeyTap(configs.keys.up));
+  // await repeat(6, SPEED_PRESS, async () => await customKeyTap(configs.keys.left));
+  // await repeat(4, SPEED_PRESS, async () => await customKeyTap(configs.keys.down));
+  await repeat(
+    1,
+    SPEED_PRESS,
+    async () => await customKeyTap(configs.keys.bike)
+  );
   await sleep(1);
-  await repeat(1, SPEED_STEPS, async () => await customKeyTap("a"));
-  await moveBike("a", 0.28);
-  await repeat(1, SPEED_STEPS, async () => await customKeyTap("w"));
-  await moveBike("w", 1.45);
-  await repeat(1, SPEED_STEPS, async () => await customKeyTap("a"));
-  await moveBike("a", 1.38);
-  await repeat(1, SPEED_STEPS, async () => await customKeyTap("w"));
-  await moveBike("w", 0.15);
-  await repeat(1, SPEED_STEPS, async () => await customKeyTap("a"));
-  await moveBike("a", 0.35);
-  await repeat(1, SPEED_STEPS, async () => await customKeyTap("s"));
-  await moveBike("s", 0.214);
+  await repeat(
+    1,
+    SPEED_PRESS,
+    async () => await customKeyTap(configs.keys.left)
+  );
+  await moveBike(configs.keys.left, 0.28);
+  await repeat(1, SPEED_PRESS, async () => await customKeyTap(configs.keys.up));
+  await moveBike(configs.keys.up, 1.45);
+  await repeat(
+    1,
+    SPEED_PRESS,
+    async () => await customKeyTap(configs.keys.left)
+  );
+  await moveBike(configs.keys.left, 1.38);
+  await repeat(1, SPEED_PRESS, async () => await customKeyTap(configs.keys.up));
+  await moveBike(configs.keys.up, 0.15);
+  await repeat(
+    1,
+    SPEED_PRESS,
+    async () => await customKeyTap(configs.keys.left)
+  );
+  await moveBike(configs.keys.left, 0.35);
+  await repeat(
+    1,
+    SPEED_PRESS,
+    async () => await customKeyTap(configs.keys.down)
+  );
+  await moveBike(configs.keys.down, 0.214);
 
   console.log("iniciando rota de farm");
   await resetRoute();
