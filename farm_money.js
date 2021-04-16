@@ -77,15 +77,13 @@ async function checkHorda() {
 
 async function battle() {
   console.log("entrando na batalha");
-  await sleep(9);
-  await repeat(6, SPEED_STEPS, async () => await customKeyTap("a"));
-  // await sleep(2);
-  await repeat(6, SPEED_STEPS, async () => await customKeyTap("w"));
+  await sleep(5.5);
+  await repeat(4, SPEED_STEPS, async () => await customKeyTap("a"));
+  await repeat(4, SPEED_STEPS, async () => await customKeyTap("w"));
   const isHorda = await checkHorda();
   if (isHorda) {
-    await repeat(6, SPEED_STEPS, async () => await customKeyTap("d"));
-    // await sleep(2);
-    await repeat(6, SPEED_STEPS, async () => await customKeyTap("s"));
+    await repeat(4, SPEED_STEPS, async () => await customKeyTap("d"));
+    await repeat(4, SPEED_STEPS, async () => await customKeyTap("s"));
     await repeat(2, SPEED_STEPS, async () => await customKeyTap("q"));
     await sleep(8);
     await goToCenter();
@@ -134,7 +132,6 @@ async function resetRoute() {
   console.log("resetando rota");
   await repeat(6, SPEED_STEPS, async () => await customKeyTap("s"));
   await repeat(6, SPEED_STEPS, async () => await customKeyTap("d"));
-  // await sleep(2.5);
 }
 
 let notFoundPokemon = 0;
