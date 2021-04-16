@@ -1,5 +1,3 @@
-const robot = require("robotjs");
-
 const sleep = require("./src/utils/sleep");
 const repeat = require("./src/utils/repeat");
 const customKeyTap = require("./src/utils/customKeyTap");
@@ -7,6 +5,7 @@ const moveBike = require("./src/utils/moveBike");
 const getAllFiles = require("./src/utils/getAllFiles");
 const excludeScreenShots = require("./src/utils/excludeScreenShots");
 const checkColorPixel = require("./src/utils/checkColorPixel");
+const setWindowFocus = require("./src/utils/setWindowFocus");
 
 const config = {
   sweet_scent_key: "5",
@@ -201,7 +200,8 @@ async function run() {
 
 async function main() {
   console.log("Coloque o pokemmo em foco");
-  await sleep(5);
+  await setWindowFocus();
+  await sleep(2);
   await run();
 }
 

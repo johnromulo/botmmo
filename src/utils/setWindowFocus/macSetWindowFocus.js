@@ -1,5 +1,6 @@
 const getWindows = require("mac-windows").getWindows;
 const focusWindow = require("mac-focus-window");
+const robot = require("robotjs");
 
 /*
 {
@@ -15,21 +16,25 @@ const focusWindow = require("mac-focus-window");
 */
 async function setWindowFocus() {
   return new Promise(async (resolve, reject) => {
-    if (!focusWindow.isSupported && !focusWindow.hasPermissions()) {
+    if (focusWindow.isSupported && !focusWindow.hasPermissions()) {
+      console.log("permission");
       focusWindow.requestPermissions();
-      throw new Error("Adcionar permição para foco de tela no mac");
+      // throw new Error("Adcionar permição para foco de tela no mac");
     }
     const windows = await getWindows();
+    // console.log("windows", windows);
     if (!windows) {
       throw new Error("Nenhuma tela encontrada");
     }
-    const pokemmoWindow = windows.find(
-      (window) => window.ownerName === "Pokemmo"
-    );
+    const pokemmoWindow = windows.find((window) => window.ownerName === "java");
     if (!pokemmoWindow) {
       throw new Error("Janela do Pokemmo não encontrada");
     }
-    focusWindow(pokemmoWindow.number);
+    robot.moveMouse(pokemmoWindow.x + 500, pokemmoWindow.y);
+    robot.mouseClick();
+    const focus = focusWindow(`${pokemmoWindow.number}`);
+    console.log("focus", focus);
+    resolve(focus);
   });
 }
 
