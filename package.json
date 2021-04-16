@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "postinstall": "node installOS.js"
+  },
   "dependencies": {
     "canvas": "^2.7.0",
     "jimp": "^0.16.1",
