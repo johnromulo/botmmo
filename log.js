@@ -23,18 +23,6 @@ const logger = createLogger({
   ],
 });
 
-const logger2 = createLogger({
-  transports: [
-    new transports.Console({
-      format: combine(timestamp(), myFormat),
-    }),
-    new transports.File({
-      filename: "logs/doc.log",
-      format: combine(timestamp(), myFormat),
-    }),
-  ],
-});
-
 async function run() {
   logger.log({
     level: "info",
