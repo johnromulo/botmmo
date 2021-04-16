@@ -105,7 +105,7 @@ async function battle() {
   console.log("saindo da batalha");
   pp--;
   console.log(`restam ${pp}s`);
-  if (pp <= 0) {
+  if (pp <= 2) {
     await goToCenter();
   } else {
     await resetRoute();
