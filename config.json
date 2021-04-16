@@ -18,5 +18,9 @@
     "pp": 32
   },
   "speed_prees_button": 0.2,
-  "screen_shot_folder": "../../../../Pictures/PokeMMO Screenshots"
+  "screen_shot_folder": "../../../../Pictures/PokeMMO Screenshots",
+  "resolution": {
+    "width": 1024,
+    "height": 768
+  }
 }
