@@ -7,6 +7,8 @@
     "postinstall": "node installOS.js"
   },
   "dependencies": {
+  "discord.js": "^12.5.3",
+    "jimp": "^0.16.1",
     "canvas": "^2.7.0",
     "jimp": "^0.16.1",
     "robotjs": "^0.6.0",
