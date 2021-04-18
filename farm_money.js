@@ -7,6 +7,7 @@ const excludeScreenShots = require("./src/utils/excludeScreenShots");
 const checkColorPixel = require("./src/utils/checkColorPixel");
 const setWindowFocus = require("./src/utils/setWindowFocus");
 const configs = require("./config.json");
+const alertCpt = require("./src/utils/alertCpt");
 
 // const config = {
 //   sweet_scent_key: "5",
@@ -23,54 +24,67 @@ let pp = configs.amount_uses.pp;
 
 async function checkbattle() {
   return new Promise(async (resolve, reject) => {
-    const filesToExclude = await getAllFiles();
-    if (filesToExclude.length > 0) {
-      await excludeScreenShots(filesToExclude);
-    }
+    try {
+      const filesToExclude = await getAllFiles();
+      if (filesToExclude.length > 0) {
+        await excludeScreenShots(filesToExclude);
+      }
+      sa;
 
-    console.log("print checkbattle");
-    await repeat(
-      1,
-      SPEED_PRESS,
-      async () => await customKeyTap(configs.keys.print_screen)
-    );
+      console.log("print checkbattle");
+      await repeat(
+        1,
+        SPEED_PRESS,
+        async () => await customKeyTap(configs.keys.print_screen)
+      );
 
-    const files = await getAllFiles();
+      const files = await getAllFiles();
 
-    const color = await checkColorPixel(files[0], { x: 1024, y: 1 });
-    if (color[0] === 0 && color[1] === 0 && color[2] === 0) {
-      console.log("batalha");
-      resolve(true);
-    } else {
-      console.log("andando");
-      resolve(false);
+      const color = await checkColorPixel(files[0], { x: 1024, y: 1 });
+      if (color[0] === 0 && color[1] === 0 && color[2] === 0) {
+        console.log("batalha");
+        resolve(true);
+      } else {
+        console.log("andando");
+        resolve(false);
+      }
+    } catch (error) {
+      console.log("error", error);
+      await alertCpt();
+      process.exit();
     }
   });
 }
 
 async function checkHorda() {
   return new Promise(async (resolve, reject) => {
-    const filesToExclude = await getAllFiles();
-    if (filesToExclude.length > 0) {
-      await excludeScreenShots(filesToExclude);
-    }
+    try {
+      const filesToExclude = await getAllFiles();
+      if (filesToExclude.length > 0) {
+        await excludeScreenShots(filesToExclude);
+      }
 
-    console.log("print checkHorda");
-    await repeat(
-      1,
-      SPEED_PRESS,
-      async () => await customKeyTap(configs.keys.print_screen)
-    );
+      console.log("print checkHorda");
+      await repeat(
+        1,
+        SPEED_PRESS,
+        async () => await customKeyTap(configs.keys.print_screen)
+      );
 
-    const files = await getAllFiles();
+      const files = await getAllFiles();
 
-    const color = await checkColorPixel(files[0], { x: 150, y: 102 });
-    if (color[0] === 0 && color[1] === 0 && color[2] === 0) {
-      console.log("sem horda");
-      resolve(false);
-    } else {
-      console.log("horda");
-      resolve(true);
+      const color = await checkColorPixel(files[0], { x: 150, y: 102 });
+      if (color[0] === 0 && color[1] === 0 && color[2] === 0) {
+        console.log("sem horda");
+        resolve(false);
+      } else {
+        console.log("horda");
+        resolve(true);
+      }
+    } catch (error) {
+      console.log("error", error);
+      await alertCpt();
+      process.exit();
     }
   });
 }
