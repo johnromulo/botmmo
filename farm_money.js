@@ -259,14 +259,6 @@ async function run() {
   await sleep(2);
   console.log("seguindo para rota de farm");
 
-  // await repeat(7, SPEED_PRESS, async () => await customKeyTap(configs.keys.left));
-  // await repeat(5, SPEED_PRESS, async () => await customKeyTap(configs.keys.up));
-  // await repeat(2, SPEED_PRESS, async () => await customKeyTap(configs.keys.right));
-  // await repeat(15, SPEED_PRESS, async () => await customKeyTap(configs.keys.up));
-  // await repeat(17, SPEED_PRESS, async () => await customKeyTap(configs.keys.left));
-  // await repeat(3, SPEED_PRESS, async () => await customKeyTap(configs.keys.up));
-  // await repeat(6, SPEED_PRESS, async () => await customKeyTap(configs.keys.left));
-  // await repeat(4, SPEED_PRESS, async () => await customKeyTap(configs.keys.down));
   await repeat(
     1,
     SPEED_PRESS,
