@@ -1,7 +1,7 @@
 // const img = require("../../../../../johnromulo/Pictures/PokeMMO Screenshots/screenshot_1618505189.png");
 // const img = require("./images-testes/battle.png");
 const { createCanvas, loadImage } = require("canvas");
-const fs = require("fs");
+const captureWindow = require("capture-window");
 
 // Coordenadas
 // hp pokemon 1 (977, 294, 1, 1)
@@ -27,7 +27,13 @@ async function run() {
   }
 }
 
-// rgba(140, 196, 84, 1);
+// run();
 
-// rgba(253, 253, 253, 255);
-run();
+async function screenshottest() {
+  captureWindow("Finder", "Test", function (err, filePath) {
+    if (err) console.log(err);
+    console.log("filePath", filePath);
+  });
+}
+
+screenshottest();

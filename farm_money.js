@@ -76,6 +76,31 @@ async function checkHorda() {
 }
 
 async function battle() {
+  const atk2 = async () => {
+    await sleep(8);
+    console.log("atk 2");
+    await repeat(
+      1,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.button_z)
+    );
+    await repeat(
+      1,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.down)
+    );
+    await repeat(
+      1,
+      SPEED_PRESS,
+      async () => await customKeyTap(configs.keys.button_z)
+    );
+    await sleep(12);
+    const isbattle = await checkbattle();
+    if (isbattle) {
+      await atk2();
+    }
+  };
+
   console.log("entrando na batalha");
   await sleep(5.5);
   await repeat(
@@ -102,7 +127,8 @@ async function battle() {
       async () => await customKeyTap(configs.keys.button_z)
     );
     await sleep(8);
-    await goToCenter();
+    await resetRoute();
+    await route();
   }
   console.log("atk");
   await repeat(
@@ -113,28 +139,12 @@ async function battle() {
   await sleep(12);
   const isbattle = await checkbattle();
   if (isbattle) {
-    await sleep(8);
-    console.log("atk 2");
-    await repeat(
-      1,
-      SPEED_PRESS,
-      async () => await customKeyTap(configs.keys.button_z)
-    );
-    await repeat(
-      1,
-      SPEED_PRESS,
-      async () => await customKeyTap(configs.keys.down)
-    );
-    await repeat(
-      1,
-      SPEED_PRESS,
-      async () => await customKeyTap(configs.keys.down)
-    );
-    await sleep(12);
+    await atk2();
   }
   console.log("saindo da batalha");
   pp--;
   console.log(`restam ${pp}s`);
+  await controlRun();
   if (pp <= 2) {
     await goToCenter();
   } else {
@@ -176,6 +186,7 @@ async function resetRoute() {
 
 let notFoundPokemon = 0;
 async function route() {
+  await controlRun();
   console.log("seguindo rota");
   if (notFoundPokemon >= 6) {
     console.log("pokemon não encontrado");
@@ -285,6 +296,27 @@ async function run() {
     await battle();
   }
   await route();
+}
+
+const time = new Date().getTime();
+let timePause = time + 1000 * 60 * configs.pause_time;
+
+async function controlRun() {
+  const timeRun = new Date();
+  var diff = Math.abs(timeRun - time);
+  var minutes = Math.floor(diff / 1000 / 60);
+
+  console.log("tempo rodando: ", minutes, "minutos");
+  if (time + 1000 * 60 * configs.run_minutes <= timeRun.getTime()) {
+    console.log("fim");
+    process.exit();
+  } else if (timePause <= timeRun.getTime()) {
+    timePause = timeRun.getTime() + 1000 * 60 * configs.pause_time;
+    console.log("stop");
+    await sleep(60 * 2);
+    console.log("play");
+    await goToCenter();
+  }
 }
 
 async function main() {

@@ -22,5 +22,7 @@
   "resolution": {
     "width": 1024,
     "height": 768
-  }
+  },
+  "run_minutes": 60,
+  "pause_time": 15
 }
