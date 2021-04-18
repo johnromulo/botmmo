@@ -29,7 +29,6 @@ async function checkbattle() {
       if (filesToExclude.length > 0) {
         await excludeScreenShots(filesToExclude);
       }
-      sa;
 
       console.log("print checkbattle");
       await repeat(
