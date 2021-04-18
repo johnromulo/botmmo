@@ -24,5 +24,8 @@
     "height": 768
   },
   "run_minutes": 60,
-  "pause_time": 15
+  "pause_time": 15,
+  "user_discord_id": 0,
+  "discord_webhook_id": "",
+  "discord_webhook_token": ""
 }
