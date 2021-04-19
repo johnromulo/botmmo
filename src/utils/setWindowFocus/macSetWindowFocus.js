@@ -34,7 +34,7 @@ async function setWindowFocus() {
     robot.mouseClick();
     const focus = focusWindow(`${pokemmoWindow.number}`);
     console.log("focus", focus);
-    resolve(focus);
+    resolve({ focus, x: pokemmoWindow.x, y: pokemmoWindow.y });
   });
 }
 

@@ -3,3 +3,5 @@
 *.log
 
 config.json
+*.jpg
+*.png
