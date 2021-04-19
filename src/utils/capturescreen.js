@@ -8,8 +8,6 @@ const print = () => {
 
 sleep(1000);
 
-robot.keyTap("c");
-
 sleep(500);
 
 print();
