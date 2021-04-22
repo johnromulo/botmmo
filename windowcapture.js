@@ -1,8 +1,8 @@
 const WindowCapture = require("./src/Classes/WindowCapture");
 const sleep = require("./src/utils/sleep");
 
-// const wincap = new WindowCapture("Calculadora\0");
-const wincap = new WindowCapture("PokeMMO\0");
+const wincap = new WindowCapture("Calculadora\0");
+// const wincap = new WindowCapture("PokeMMO\0");
 
 // wincap.print();
 

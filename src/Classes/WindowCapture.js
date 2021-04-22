@@ -6,8 +6,7 @@ const screenshot = require("screenshot-desktop");
 require("ref-napi");
 
 K.load();
-const user32 = U.load(); // load all apis defined in lib/{dll}/api from user32.dll
-// const user32 = U.load(['FindWindowExW'])  // load only one api defined in lib/{dll}/api from user32.dll
+const user32 = U.load();
 
 function colorNormalize(robotScreenPic, path) {
   return new Promise((resolve, reject) => {
@@ -21,7 +20,8 @@ function colorNormalize(robotScreenPic, path) {
         image.bitmap.data[idx + 3] = robotScreenPic.image.readUInt8(pos++);
       });
       // image.write(path, resolve);
-      resolve(image);
+      const bs64 = Buffer.from(image.bitmap.data).toString("base64");
+      resolve(bs64);
     } catch (e) {
       console.error(e);
       reject(e);
@@ -30,6 +30,9 @@ function colorNormalize(robotScreenPic, path) {
 }
 
 class WindowCapture {
+  stopped = true;
+  screenshot = null;
+
   hwnd = null;
   w = 0;
   h = 0;
@@ -71,22 +74,22 @@ class WindowCapture {
         this.offset_x = rect.left + this.cropped_x;
         this.offset_y = rect.top + this.cropped_y;
 
-        console.log(
-          "window finded",
-          rect,
-          "w",
-          this.w,
-          "h",
-          this.h,
-          "cropped_x",
-          this.cropped_x,
-          "cropped_y",
-          this.cropped_y,
-          "offset_x",
-          this.offset_x,
-          "offset_y",
-          this.offset_y
-        );
+        // console.log(
+        //   "window finded",
+        //   rect,
+        //   "w",
+        //   this.w,
+        //   "h",
+        //   this.h,
+        //   "cropped_x",
+        //   this.cropped_x,
+        //   "cropped_y",
+        //   this.cropped_y,
+        //   "offset_x",
+        //   this.offset_x,
+        //   "offset_y",
+        //   this.offset_y
+        // );
       }
     } else {
       throw new Error(`Window not found: ${title}`);
@@ -107,6 +110,12 @@ class WindowCapture {
 
   async get_screenshot() {
     await screenshot({ filename: "demo.jpg" });
+  }
+
+  async run() {
+    while (!this.stopped) {
+      this.screenshot = await wincap.print();
+    }
   }
 }
 
