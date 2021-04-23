@@ -11,6 +11,7 @@
     "discord.js": "^12.5.3",
     "easyimage": "^3.1.1",
     "jimp": "^0.16.1",
+    "opencv4nodejs": "^5.6.0",
     "robotjs": "^0.6.0",
     "screenshot-desktop": "^1.12.3",
     "win32-api": "^9.6.0",
