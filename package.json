@@ -9,10 +9,9 @@
   "dependencies": {
     "canvas": "^2.7.0",
     "discord.js": "^12.5.3",
-    "easyimage": "^3.1.1",
     "jimp": "^0.16.1",
     "robotjs": "^0.6.0",
-    "screenshot-desktop": "^1.12.3",
+    "tesseract.js": "^2.1.1",
     "win32-api": "^9.6.0",
     "winston": "^3.3.3"
   }
