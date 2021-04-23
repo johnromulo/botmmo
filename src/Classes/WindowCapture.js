@@ -1,7 +1,6 @@
 const { K, U } = require("win32-api");
 const robot = require("robotjs");
 let Jimp = require("jimp");
-const screenshot = require("screenshot-desktop");
 
 require("ref-napi");
 
@@ -20,8 +19,11 @@ function colorNormalize(robotScreenPic, path) {
         image.bitmap.data[idx + 3] = robotScreenPic.image.readUInt8(pos++);
       });
       // image.write(path, resolve);
-      const bs64 = Buffer.from(image.bitmap.data).toString("base64");
-      resolve(bs64);
+      // const bs64 = Buffer.from(image.bitmap.data).toString("base64");
+      image.getBase64(Jimp.MIME_PNG, (err, res) => {
+        resolve(res);
+      });
+      
     } catch (e) {
       console.error(e);
       reject(e);
@@ -106,10 +108,6 @@ class WindowCapture {
 
     const screenshot = await colorNormalize(pic, "t.jpg");
     return screenshot;
-  }
-
-  async get_screenshot() {
-    await screenshot({ filename: "demo.jpg" });
   }
 
   async run() {

@@ -17,8 +17,8 @@
     "sweet_scent": 6,
     "pp": 32
   },
-  "speed_prees_button": 0.2,
-  "screen_shot_folder": "../../../../Pictures/PokeMMO Screenshots",
+  "speed_press_button": 0.2,
+  "screen_shot_folder": "",
   "resolution": {
     "width": 1024,
     "height": 768
