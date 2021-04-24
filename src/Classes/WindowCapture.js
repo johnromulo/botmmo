@@ -20,9 +20,11 @@ function colorNormalize(robotScreenPic, path) {
       });
       // image.write(path, resolve);
       // const bs64 = Buffer.from(image.bitmap.data).toString("base64");
-      image.getBase64(Jimp.MIME_PNG, (err, res) => {
+      image.getBase64(Jimp.MIME_JPEG, (err, res) => {
         resolve(res);
       });
+      // resolve(image);
+      // image.write('screenshot.jpg', resolve);
       
     } catch (e) {
       console.error(e);

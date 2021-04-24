@@ -30,10 +30,10 @@ async function run() {
   if (maxVal >= threshold) {
     console.log("Found needle!");
 
-    console.log("maxVal", maxVal);
-    console.log("minVal", minVal);
-    console.log("minLoc", minLoc);
-    console.log("maxLoc", maxLoc);
+    // console.log("maxVal", maxVal);
+    // console.log("minVal", minVal);
+    // console.log("minLoc", minLoc);
+    // console.log("maxLoc", maxLoc);
 
     locations.forEach((pt) => {
       screenshot.drawRectangle(
