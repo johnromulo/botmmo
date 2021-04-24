@@ -1,3 +1,21 @@
+const { Worker } = require('worker_threads');
+
+const run = () =>{
+    const count = 0;
+    while(count > 5){
+        console.log('helo word');
+        count++
+    }
+}
+
+const worker = new Worker(run, { eval: true });
+
+worker.on('message', message => console.log(message));      
+worker.postMessage('ping');  
+
+
+
+
 const { payloads } = require('./payloads.json')
 const crypto = require('crypto')
 const { Worker, isMainThread, parentPort } = require('worker_threads')

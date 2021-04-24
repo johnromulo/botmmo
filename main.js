@@ -5,55 +5,70 @@ const Vision = require("./src/Classes/Vision");
 const WindowCapture = require("./src/Classes/WindowCapture");
 
 
+const detection_objects = [
+  {
+    path: "./images/battledetect/horder.jpg",
+    tagname: "horda",
+    threshold: 0.98
+  },
+  {
+    path: "./images/battledetect/enemy_hp.jpg",
+    tagname: "enemy_hp",
+    threshold: 0.98
+  },
+  {
+    path: "./images/battledetect/my_hp.jpg",
+    tagname: "hp",
+    threshold: 0.98
+  }
+]
+
 const wincap = new WindowCapture("PokeMMO\0");
 const vision = new Vision();
-const detector = new Detection("./images/battledetect/horder.jpg", 'horda', 0.98);
+const detector = new Detection(detection_objects);
+
+const DEBUG = true;
+const finish = false;
+
+let time = new Date().getTime();
 detector.start();
 
 async function run() {
-    console.log('start main');
-    let time = new Date().getTime();
-    // await wincap.print();
-    
-    while(true){
-        const print = await wincap.print();
-        // console.log('print',print);
+  const print = await wincap.print();
 
-        // detector.run("./images/horder.jpg");
-        // detector.run("screenshot.jpg");
+  const base64Data = print.replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '');
 
-        const base64Data = print.replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '');
-        // const screenshot = cv.imdecode(base64Data, cv.IMREAD_UNCHANGED)
-        detector.run(Buffer.from(base64Data, 'base64'));
+  detector.run(Buffer.from(base64Data, 'base64'));
 
-        if(detector.points){
-            // console.log('detector.points', detector.points)
-            const pointsHorder = detector.points.find(point => point.tagname === 'horda');
-            // console.log('pointsHorder', pointsHorder);
+  if (detector.points) {
+    const pointsHorder = detector.points.find(point => point.tagname === 'horda');
+    // console.log("pointsHorder", pointsHorder);
 
-            if(pointsHorder){
-                pointsHorder.locations.forEach(point => {
-                    vision.draw_rectangles(detector.screenshot,{
-                        x: point.x, y: point.y, w: pointsHorder.w, h: pointsHorder.h
-                    },{B: 0, G:255, B:0});                    
-                });
-            }
-        }
-
-        cv.imshow("Matches", detector.screenshot);
-        // cv.imshow("Matches", screenshot);
-        const key = cv.waitKey(1)
-        // if(key !== -1){
-        //     console.log('key', key)
-        // }
-        if (key === 113){        
-            detector.stop();
-            cv.destroyAllWindows();
-            break;
-        }
-        console.log("FPS: ", (1000 / (new Date().getTime() - time)).toFixed(2));
-        time = new Date().getTime();
+    if (pointsHorder && pointsHorder.locations.leght) {
+      pointsHorder.locations.forEach(point => {
+        vision.draw_rectangles(detector.screenshot, {
+          x: point.x, y: point.y, w: pointsHorder.w, h: pointsHorder.h
+        }, { B: 0, G: 255, B: 0 });
+      });
     }
+  }
+
+  if (DEBUG) {
+    cv.imshow("Debug", detector.screenshot);
+    const key = cv.waitKey(1);
+    if (key === 113) {
+      finish = true;
+      detector.stop();
+      cv.destroyAllWindows();
+    }
+  }
+
+  console.log("FPS: ", (1000 / (new Date().getTime() - time)).toFixed(2));
+  time = new Date().getTime();
+  if (!finish) {
+    await run();
+  }
 }
 
 run();
+

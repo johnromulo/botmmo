@@ -7,7 +7,7 @@ require("ref-napi");
 K.load();
 const user32 = U.load();
 
-function colorNormalize(robotScreenPic, path) {
+function colorNormalize(robotScreenPic) {
   return new Promise((resolve, reject) => {
     try {
       const image = new Jimp(robotScreenPic.width, robotScreenPic.height);
@@ -25,7 +25,6 @@ function colorNormalize(robotScreenPic, path) {
       });
       // resolve(image);
       // image.write('screenshot.jpg', resolve);
-      
     } catch (e) {
       console.error(e);
       reject(e);
@@ -34,9 +33,6 @@ function colorNormalize(robotScreenPic, path) {
 }
 
 class WindowCapture {
-  stopped = true;
-  screenshot = null;
-
   hwnd = null;
   w = 0;
   h = 0;
@@ -46,7 +42,6 @@ class WindowCapture {
   offset_y = 0;
 
   constructor(title) {
-    console.log("search ", title);
     const lpszWindow = Buffer.from(title, "ucs2");
     this.hwnd = user32.FindWindowExW(0, 0, null, lpszWindow);
 
@@ -110,12 +105,6 @@ class WindowCapture {
 
     const screenshot = await colorNormalize(pic, "t.jpg");
     return screenshot;
-  }
-
-  async run() {
-    while (!this.stopped) {
-      this.screenshot = await wincap.print();
-    }
   }
 }
 
