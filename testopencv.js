@@ -4,20 +4,20 @@ async function run() {
   // horder
   //battle
   const screenshot = await cv.imreadAsync(
-    "./images/hd/single_battle.jpg",
+    "./images/hd/run.jpg",
     cv.IMREAD_UNCHANGED
   );
 
   //enemy_hp
   //horder
-  const threshold = 0.98;
+  const threshold = 0.85;
   const needle = await cv.imreadAsync(
-    "./images/battledetect/enemy_hp.jpg",
+    "./images/battledetect/run.jpg",
     cv.IMREAD_UNCHANGED
   );
 
   const needle2 = await cv.imreadAsync(
-    "./images/battledetect/my_hp.jpg",
+    "./images/battledetect/evolution.jpg",
     cv.IMREAD_UNCHANGED
   );
 
@@ -44,8 +44,8 @@ async function run() {
     locations.forEach((pt) => {
       screenshot.drawRectangle(
         new cv.Rect(pt.x, pt.y, needle.cols, needle.rows),
-        new cv.Vec3(0, 255, 0),
-        1,
+        new cv.Vec3(255, 0, 0),
+        2,
         cv.LINE_8
       );
     });
@@ -53,12 +53,12 @@ async function run() {
     const matched2 = screenshot.matchTemplate(needle2, cv.TM_CCOEFF_NORMED);
 
     const locations2 = matched2
-      .threshold(threshold, 1, cv.THRESH_BINARY)
+      .threshold(0.995, 1, cv.THRESH_BINARY)
       .convertTo(cv.CV_8U)
       .findNonZero();
 
 
-    console.log("locations", locations);
+    console.log("locations2", locations2);
 
     const { minVal, maxVal, minLoc, maxLoc } = matched2.minMaxLoc();
 
@@ -74,7 +74,7 @@ async function run() {
       locations2.forEach((pt) => {
         screenshot.drawRectangle(
           new cv.Rect(pt.x, pt.y, needle2.cols, needle2.rows),
-          new cv.Vec3(255, 0, 0),
+          new cv.Vec3(0, 255, 0),
           1,
           cv.LINE_8
         );

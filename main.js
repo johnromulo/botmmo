@@ -20,10 +20,32 @@ const detection_objects = [
     path: "./images/battledetect/my_hp.jpg",
     tagname: "hp",
     threshold: 0.98
+  },
+  {
+    path: "./images/battledetect/evolution.jpg",
+    tagname: "evolution",
+    threshold: 0.995
+  },
+  {
+    path: "./images/battledetect/cancel_btn_evolution.jpg",
+    tagname: "cancel_btn_evolution",
+    threshold: 0.98
+  },
+  {
+    path: "./images/battledetect/new_atk.jpg",
+    tagname: "new_atk",
+    threshold: 0.98
+  },
+  {
+    path: "./images/battledetect/cancel_btn_new_atk.jpg",
+    tagname: "cancel_btn_new_atk",
+    threshold: 0.98
   }
 ]
 
+// OpenJDK Platform binary;
 const wincap = new WindowCapture("PokeMMO\0");
+// const wincap = new WindowCapture("OpenJDK Platform binary\0");
 const vision = new Vision();
 const detector = new Detection(detection_objects);
 
