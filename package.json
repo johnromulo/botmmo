@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "postinstall": "node installOS.js"
+    "postinstall": "node installOS.js",
+    "farm_money": "node ./src/farms/money/main.js"
   },
   "dependencies": {
     "canvas": "^2.7.0",
