@@ -6,55 +6,56 @@ const WindowCapture = require("../../Classes/WindowCapture");
 
 const { goToCenter } = require("../../game/goToCenter");
 const { healCenter } = require("../../game/healCenter");
+const { atk } = require("../../game/atk");
 const { goToFarm } = require("./goToFarm");
 const { exitCenter } = require("./exitCenter");
-const { loopFarm } = require("./loopFarm");
+// const { loopFarm } = require("./loopFarm");
+const configs = require("../../../config.json");
 
 const sleep = require("../../utils/sleep");
-
 
 const detection_objects = [
   {
     path: "./images/battledetect/horder.jpg",
     tagname: "horda",
-    threshold: 0.98
+    threshold: 0.98,
   },
   {
     path: "./images/battledetect/enemy_hp.jpg",
     tagname: "enemy_hp",
-    threshold: 0.98
+    threshold: 0.98,
   },
   {
     path: "./images/battledetect/my_hp.jpg",
     tagname: "hp",
-    threshold: 0.98
+    threshold: 0.98,
   },
   {
     path: "./images/battledetect/evolution.jpg",
     tagname: "evolution",
-    threshold: 0.995
+    threshold: 0.995,
   },
   {
     path: "./images/battledetect/cancel_btn_evolution.jpg",
     tagname: "cancel_btn_evolution",
-    threshold: 0.98
+    threshold: 0.98,
   },
   {
     path: "./images/battledetect/new_atk.jpg",
     tagname: "new_atk",
-    threshold: 0.98
+    threshold: 0.98,
   },
   {
     path: "./images/battledetect/cancel_btn_new_atk.jpg",
     tagname: "cancel_btn_new_atk",
-    threshold: 0.98
+    threshold: 0.98,
   },
   {
     path: "./images/battledetect/run.jpg",
     tagname: "run",
-    threshold: 0.85
-  }
-]
+    threshold: 0.85,
+  },
+];
 
 // OpenJDK Platform binary;
 const wincap = new WindowCapture("PokeMMO\0");
@@ -65,9 +66,8 @@ const detector = new Detection(detection_objects);
 const DEBUG = true;
 const finish = false;
 
-let time = new Date().getTime();
+// let time = new Date().getTime();
 detector.start();
-
 
 const BOT_STAGES = {
   START: 0,
@@ -78,13 +78,52 @@ const BOT_STAGES = {
 };
 
 let bot_stage = BOT_STAGES.START;
+let atk_qt = 0;
+let pp = configs.amount_uses.pp;
+// const time = new Date().getTime();
 
 async function run() {
   const print = await wincap.print();
 
-  const base64Data = print.replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '');
+  const base64Data = print
+    .replace("data:image/jpeg;base64,", "")
+    .replace("data:image/png;base64,", "");
 
-  detector.run(Buffer.from(base64Data, 'base64'));
+  detector.run(Buffer.from(base64Data, "base64"));
+
+  if (detector.points) {
+    const pointsRun = detector.points.find((point) => point.tagname === "run");
+    if (pointsRun && pointsRun.locations.length > 0) {
+      pointsRun.locations.forEach((point) => {
+        vision.draw_rectangles(
+          detector.screenshot,
+          {
+            x: point.x,
+            y: point.y,
+            w: pointsRun.w,
+            h: pointsRun.h,
+          },
+          { B: 255, G: 0, B: 0 }
+        );
+      });
+    }
+
+    const pointsMyHp = detector.points.find((point) => point.tagname === "hp");
+    if (pointsMyHp && pointsMyHp.locations.length > 0) {
+      pointsMyHp.locations.forEach((point) => {
+        vision.draw_rectangles(
+          detector.screenshot,
+          {
+            x: point.x,
+            y: point.y,
+            w: pointsMyHp.w,
+            h: pointsMyHp.h,
+          },
+          { B: 0, G: 255, B: 0 }
+        );
+      });
+    }
+  }
 
   switch (bot_stage) {
     case BOT_STAGES.START:
@@ -106,56 +145,37 @@ async function run() {
     case BOT_STAGES.FARMING:
       console.log("BOT_STAGES.FARMING");
       // loopFarm();
-
-      if (detector.points) {
-
-        const pointsRun = detector.points.find(point => point.tagname === 'run');
-        console.log("pointsMyHp", pointsRun);
-        if (pointsRun && pointsRun.locations.length > 0) {
-          pointsRun.locations.forEach(point => {
-            vision.draw_rectangles(detector.screenshot, {
-              x: point.x, y: point.y, w: pointsRun.w, h: pointsRun.h
-            }, { B: 255, G: 0, B: 0 });
-          });
-        }
-
-        const pointsMyHp = detector.points.find(point => point.tagname === 'hp');
-        console.log("pointsMyHp", pointsMyHp);
-        if (pointsMyHp && pointsMyHp.locations.length > 0) {
-          pointsMyHp.locations.forEach(point => {
-            vision.draw_rectangles(detector.screenshot, {
-              x: point.x, y: point.y, w: pointsMyHp.w, h: pointsMyHp.h
-            }, { B: 0, G: 255, B: 0 });
-          });
-          bot_stage = BOT_STAGES.BATTLE;
-        }
+      if (
+        detector.points &&
+        detector.points.find((point) => point.tagname === "hp")
+      ) {
+        bot_stage = BOT_STAGES.BATTLE;
       }
       break;
     case BOT_STAGES.BATTLE:
       console.log("BOT_STAGES.BATTLE");
-      if (detector.points) {
-        const pointsRun = detector.points.find(point => point.tagname === 'run');
-        console.log("pointsMyHp", pointsRun);
-        if (pointsRun && pointsRun.locations.length > 0) {
-          pointsRun.locations.forEach(point => {
-            vision.draw_rectangles(detector.screenshot, {
-              x: point.x, y: point.y, w: pointsRun.w, h: pointsRun.h
-            }, { B: 255, G: 0, B: 0 });
-          });
+      if (atk_qt === 0) {
+        await atk(1);
+      } else {
+        await atk(2);
+      }
+
+      if (
+        detector.points &&
+        detector.points.find((point) => point.tagname === "run")
+      ) {
+        pp--;
+        atk_qt = 0;
+        console.log(`restam ${pp}s`);
+        // await controlRun();
+        if (pp === 0) {
+          bot_stage = BOT_STAGES.START;
+        } else {
+          //  move
           bot_stage = BOT_STAGES.FARMING;
         }
-
-        const pointsMyHp = detector.points.find(point => point.tagname === 'hp');
-        console.log("pointsMyHp", pointsMyHp);
-        if (pointsMyHp && pointsMyHp.locations.length > 0) {
-          pointsMyHp.locations.forEach(point => {
-            vision.draw_rectangles(detector.screenshot, {
-              x: point.x, y: point.y, w: pointsMyHp.w, h: pointsMyHp.h
-            }, { B: 0, G: 255, B: 0 });
-          });
-          bot_stage = BOT_STAGES.BATTLE;
-        }
       }
+      atk_qt++;
       break;
     default:
       break;
@@ -171,13 +191,12 @@ async function run() {
     }
   }
 
-
   if (!finish) {
     await run();
   }
 }
 
-detector.objects.find(obj => obj.tagname === 'hp').stopDetection = false;
+detector.objects.find((obj) => obj.tagname === "hp").stopDetection = false;
 
 async function init() {
   console.log("init");
@@ -186,4 +205,4 @@ async function init() {
   await run();
 }
 
-init()
+init();
