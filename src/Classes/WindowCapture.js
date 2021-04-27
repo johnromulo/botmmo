@@ -21,14 +21,14 @@ function colorNormalize(robotScreenPic) {
       // image.write(path, resolve);
       // const bs64 = Buffer.from(image.bitmap.data).toString("base64");
       // console.log("image.bitmap.data", image.bitmap.data);
-      // image.getBase64(Jimp.MIME_JPEG, (err, res) => {
-      //   resolve(res);
-      // });
-
-      image.getBuffer(Jimp.MIME_X_MS_BMP, (err, res) => {
-        // console.log(buffer);
+      image.getBase64(Jimp.MIME_JPEG, (err, res) => {
         resolve(res);
       });
+
+      // image.getBuffer(Jimp.MIME_X_MS_BMP, (err, res) => {
+      //   // console.log(buffer);
+      //   resolve(res);
+      // });
       // resolve(image.bitmap.data);
       // image.write('screenshot.jpg', resolve);
     } catch (e) {

@@ -36,13 +36,14 @@ class Detection {
           obj.img,
           cv.TM_CCOEFF_NORMED
         );
+
         const locations = matched
           .threshold(obj.threshold, 1, cv.THRESH_BINARY)
           .convertTo(cv.CV_8U)
           .findNonZero();
 
         return {
-          locations,
+          locations: locations ? locations : [],
           tagname: obj.tagname,
           w: obj.img.cols,
           h: obj.img.rows,

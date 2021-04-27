@@ -88,59 +88,66 @@ let pp = configs.amount_uses.pp;
 let runbot = false;
 // const time = new Date().getTime();
 
+let execCapture = false;
 async function capture() {
-  console.log("capture");
-  const print = await wincap.print();
+  if (execCapture) {
+    console.log("capture");
+    const print = await wincap.print();
 
-  // const base64Data = print
-  //   .replace("data:image/jpeg;base64,", "")
-  //   .replace("data:image/png;base64,", "");
+    const base64Data = print
+      .replace("data:image/jpeg;base64,", "")
+      .replace("data:image/png;base64,", "");
 
-  // detector.run(Buffer.from(base64Data, "base64"));
-  detector.run(print);
+    detector.run(Buffer.from(base64Data, "base64"));
+    // detector.run(print);
 
-  if (detector.points) {
-    const pointsRun = detector.points.find((point) => point.tagname === "run");
-    if (pointsRun && pointsRun.locations.length > 0) {
-      pointsRun.locations.forEach((point) => {
-        vision.draw_rectangles(
-          detector.screenshot,
-          {
-            x: point.x,
-            y: point.y,
-            w: pointsRun.w,
-            h: pointsRun.h,
-          },
-          { B: 255, G: 0, R: 0 }
-        );
-      });
+    if (detector.points) {
+      const pointsRun = detector.points.find(
+        (point) => point.tagname === "run"
+      );
+      if (pointsRun && pointsRun.locations.length > 0) {
+        pointsRun.locations.forEach((point) => {
+          vision.draw_rectangles(
+            detector.screenshot,
+            {
+              x: point.x,
+              y: point.y,
+              w: pointsRun.w,
+              h: pointsRun.h,
+            },
+            { B: 255, G: 0, R: 0 }
+          );
+        });
+      }
+
+      const pointsMyHp = detector.points.find(
+        (point) => point.tagname === "hp"
+      );
+      if (pointsMyHp && pointsMyHp.locations.length > 0) {
+        pointsMyHp.locations.forEach((point) => {
+          vision.draw_rectangles(
+            detector.screenshot,
+            {
+              x: point.x,
+              y: point.y,
+              w: pointsMyHp.w,
+              h: pointsMyHp.h,
+            },
+            { B: 0, G: 255, R: 0 }
+          );
+        });
+      }
     }
 
-    const pointsMyHp = detector.points.find((point) => point.tagname === "hp");
-    if (pointsMyHp && pointsMyHp.locations.length > 0) {
-      pointsMyHp.locations.forEach((point) => {
-        vision.draw_rectangles(
-          detector.screenshot,
-          {
-            x: point.x,
-            y: point.y,
-            w: pointsMyHp.w,
-            h: pointsMyHp.h,
-          },
-          { B: 0, G: 255, R: 0 }
-        );
-      });
-    }
-  }
-
-  if (DEBUG && detector.screenshot) {
-    console.log("show");
-    cv.imshow("Debug", detector.screenshot);
-    const key = cv.waitKey(1);
-    if (key === 113) {
-      finish = true;
-      detector.stop();
-      cv.destroyAllWindows();
+    if (DEBUG && detector.screenshot) {
+      console.log("show");
+      cv.imshow("Debug", detector.screenshot);
+      const key = cv.waitKey(1);
+      if (key === 113) {
+        finish = true;
+        detector.stop();
+        cv.destroyAllWindows();
+      }
     }
   }
 }
@@ -169,12 +176,15 @@ async function bot() {
         break;
       case BOT_STAGES.FARMING:
         console.log("BOT_STAGES.FARMING");
+        execCapture = true;
+        await sleep(4);
         // loopFarm();
         if (
           detector.points &&
           detector.points.find((point) => point.tagname === "hp").locations
             .length > 0
         ) {
+          execCapture = false;
           bot_stage = BOT_STAGES.BATTLE;
         }
         break;
@@ -194,7 +204,10 @@ async function bot() {
             await atk(2);
           }
         }
-
+        execCapture = true;
+        await sleep(6);
+        console.log("segue o jogo");
+        execCapture = false;
         if (
           detector.points &&
           detector.points.find((point) => point.tagname === "run").locations
