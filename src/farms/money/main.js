@@ -59,7 +59,7 @@ const detection_objects = [
     path: "./images/battledetect/enemy_hp_finish.jpg",
     tagname: "enemy_hp_finish",
     threshold: 0.98,
-  }
+  },
 ];
 
 // OpenJDK Platform binary;
@@ -92,11 +92,12 @@ async function capture() {
   console.log("capture");
   const print = await wincap.print();
 
-  const base64Data = print
-    .replace("data:image/jpeg;base64,", "")
-    .replace("data:image/png;base64,", "");
+  // const base64Data = print
+  //   .replace("data:image/jpeg;base64,", "")
+  //   .replace("data:image/png;base64,", "");
 
-  detector.run(Buffer.from(base64Data, "base64"));
+  // detector.run(Buffer.from(base64Data, "base64"));
+  detector.run(print);
 
   if (detector.points) {
     const pointsRun = detector.points.find((point) => point.tagname === "run");
@@ -171,7 +172,8 @@ async function bot() {
         // loopFarm();
         if (
           detector.points &&
-          detector.points.find((point) => point.tagname === "hp").locations.length > 0
+          detector.points.find((point) => point.tagname === "hp").locations
+            .length > 0
         ) {
           bot_stage = BOT_STAGES.BATTLE;
         }
@@ -182,8 +184,12 @@ async function bot() {
           console.log("atk_1");
           await atk(1);
         } else {
-          if (detector.points &&
-            !detector.points.find((point) => point.tagname === "enemy_hp_finish").locations.length > 0) {
+          if (
+            detector.points &&
+            !detector.points.find(
+              (point) => point.tagname === "enemy_hp_finish"
+            ).locations.length > 0
+          ) {
             console.log("atk_2");
             await atk(2);
           }
@@ -191,7 +197,8 @@ async function bot() {
 
         if (
           detector.points &&
-          detector.points.find((point) => point.tagname === "run").locations.length > 0
+          detector.points.find((point) => point.tagname === "run").locations
+            .length > 0
         ) {
           console.log("detection run");
           pp--;
@@ -216,7 +223,6 @@ async function bot() {
   }
 }
 
-
 async function run() {
   await capture();
   bot();
@@ -228,6 +234,10 @@ async function run() {
 }
 
 // detector.objects.find((obj) => obj.tagname === "hp").stopDetection = false;
+// detector.objects.find(
+//   (obj) => obj.tagname === "enemy_hp_finish"
+// ).stopDetection = false;
+// detector.objects.find((obj) => obj.tagname === "run").stopDetection = false;
 
 async function init() {
   console.log("init");

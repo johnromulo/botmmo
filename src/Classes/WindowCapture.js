@@ -20,15 +20,14 @@ function colorNormalize(robotScreenPic) {
       });
       // image.write(path, resolve);
       // const bs64 = Buffer.from(image.bitmap.data).toString("base64");
-      console.log("image.bitmap.data", image.bitmap.data);
+      // console.log("image.bitmap.data", image.bitmap.data);
       // image.getBase64(Jimp.MIME_JPEG, (err, res) => {
       //   resolve(res);
       // });
 
-      image.getBuffer(Jimp.MIME_JPEG, (err, res) => {
+      image.getBuffer(Jimp.MIME_X_MS_BMP, (err, res) => {
         // console.log(buffer);
         resolve(res);
-
       });
       // resolve(image.bitmap.data);
       // image.write('screenshot.jpg', resolve);
@@ -110,17 +109,8 @@ class WindowCapture {
       this.h
     );
 
-    const screenshot = await colorNormalize(pic, "t.jpg");
+    const screenshot = await colorNormalize(pic);
     return screenshot;
-  }
-
-  async print2() {
-
-    let IMG;
-    const printWin = user32.PrintWindow(this.hwnd, IMG, 0);
-
-    console.log("printWin", printWin);
-    console.log("IMG", IMG);
   }
 }
 
