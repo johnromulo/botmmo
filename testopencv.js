@@ -42,42 +42,42 @@ async function run() {
       );
     });
 
-    // const needle2 = await cv.imreadAsync(
-    //   "./images/battledetect/single_battle.jpg",
-    //   cv.IMREAD_UNCHANGED
-    // );
+    const needle2 = await cv.imreadAsync(
+      "./images/battledetect/enemy_hp_finish.jpg",
+      cv.IMREAD_UNCHANGED
+    );
 
 
-    // const matched2 = screenshot.matchTemplate(needle2, cv.TM_CCOEFF_NORMED);
+    const matched2 = screenshot.matchTemplate(needle2, cv.TM_CCOEFF_NORMED);
 
-    // const locations2 = matched2
-    //   .threshold(0.995, 1, cv.THRESH_BINARY)
-    //   .convertTo(cv.CV_8U)
-    //   .findNonZero();
-
-
-    // console.log("locations2", locations2);
-
-    // const { minVal, maxVal, minLoc, maxLoc } = matched2.minMaxLoc();
+    const locations2 = matched2
+      .threshold(0.98, 1, cv.THRESH_BINARY)
+      .convertTo(cv.CV_8U)
+      .findNonZero();
 
 
-    // if (maxVal >= threshold) {
-    //   console.log("Found needle2!");
+    console.log("locations2", locations2);
 
-    //   // console.log("maxVal", maxVal);
-    //   // console.log("minVal", minVal);
-    //   // console.log("minLoc", minLoc);
-    //   // console.log("maxLoc", maxLoc);
+    const { minVal, maxVal, minLoc, maxLoc } = matched2.minMaxLoc();
 
-    //   locations2.forEach((pt) => {
-    //     screenshot.drawRectangle(
-    //       new cv.Rect(pt.x, pt.y, needle2.cols, needle2.rows),
-    //       new cv.Vec3(0, 255, 0),
-    //       1,
-    //       cv.LINE_8
-    //     );
-    //   });
-    // }
+
+    if (maxVal >= threshold) {
+      console.log("Found needle2!");
+
+      // console.log("maxVal", maxVal);
+      // console.log("minVal", minVal);
+      // console.log("minLoc", minLoc);
+      // console.log("maxLoc", maxLoc);
+
+      locations2.forEach((pt) => {
+        screenshot.drawRectangle(
+          new cv.Rect(pt.x, pt.y, needle2.cols, needle2.rows),
+          new cv.Vec3(0, 255, 0),
+          1,
+          cv.LINE_8
+        );
+      });
+    }
 
     cv.imshow("Matches", screenshot);
     cv.waitKey();

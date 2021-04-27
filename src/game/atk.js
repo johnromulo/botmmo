@@ -25,7 +25,7 @@ async function atk(atk_number) {
     await customKeyTap(configs.keys.right);
     await customKeyTap(configs.keys.button_z);
   }
-  await sleep(8);
+  await sleep(9);
 }
 
 module.exports = { atk };
