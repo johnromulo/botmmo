@@ -2,16 +2,15 @@ const cv = require("opencv4nodejs");
 
 async function run() {
   const screenshot = await cv.imreadAsync(
-    "./images/hd/single_battle.jpg",
+    "./images/hd/horda.jpg",
     cv.IMREAD_UNCHANGED
   );
 
   const threshold = 0.95;
   const needle = await cv.imreadAsync(
-    "./images/battledetect/my_hp.jpg",
+    "./images/battledetect/horder.jpg",
     cv.IMREAD_UNCHANGED
   );
-
 
   const matched = screenshot.matchTemplate(needle, cv.TM_CCOEFF_NORMED);
 
@@ -23,7 +22,6 @@ async function run() {
   console.log("locations", locations);
 
   const { minVal, maxVal, minLoc, maxLoc } = matched.minMaxLoc();
-
 
   if (maxVal >= threshold) {
     console.log("Found needle!");
@@ -43,10 +41,9 @@ async function run() {
     });
 
     const needle2 = await cv.imreadAsync(
-      "./images/battledetect/enemy_hp_finish.jpg",
+      "./images/battledetect/my_hp.jpg",
       cv.IMREAD_UNCHANGED
     );
-
 
     const matched2 = screenshot.matchTemplate(needle2, cv.TM_CCOEFF_NORMED);
 
@@ -55,11 +52,9 @@ async function run() {
       .convertTo(cv.CV_8U)
       .findNonZero();
 
-
     console.log("locations2", locations2);
 
     const { minVal, maxVal, minLoc, maxLoc } = matched2.minMaxLoc();
-
 
     if (maxVal >= threshold) {
       console.log("Found needle2!");

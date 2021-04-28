@@ -2,10 +2,9 @@
   "keys": {
     "sweet_scent": "5",
     "teleport": "6",
-    "fly": "",
-    "rod": "",
+    "fly": "7",
+    "rod": "3",
     "bike": "1",
-    "print_screen": "0",
     "up": "w",
     "left": "a",
     "down": "s",
@@ -16,12 +15,6 @@
   "amount_uses": {
     "sweet_scent": 6,
     "pp": 32
-  },
-  "speed_press_button": 0.2,
-  "screen_shot_folder": "",
-  "resolution": {
-    "width": 1024,
-    "height": 768
   },
   "run_minutes": 60,
   "pause_time": 15,

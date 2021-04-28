@@ -7,6 +7,7 @@ const WindowCapture = require("../../Classes/WindowCapture");
 const { goToCenter } = require("../../game/goToCenter");
 const { healCenter } = require("../../game/healCenter");
 const { atk } = require("../../game/atk");
+const { escape } = require("../../game/escape");
 const { goToFarm } = require("./goToFarm");
 const { exitCenter } = require("./exitCenter");
 const { loopFarmRoutePosition } = require("./loopFarm");
@@ -80,6 +81,7 @@ const BOT_STAGES = {
   GO_TO_FARM: 2,
   FARMING: 3,
   BATTLE: 4,
+  BATTLE_OUT: 5,
 };
 
 let bot_stage = BOT_STAGES.START;
@@ -87,6 +89,7 @@ let atk_qt = 0;
 let pp = configs.amount_uses.pp;
 let runbot = false;
 let routePosition = -1;
+let escape_battle = false;
 // const time = new Date().getTime();
 
 let execCapture = false;
@@ -102,7 +105,7 @@ async function capture() {
     detector.run(Buffer.from(base64Data, "base64"));
     // detector.run(print);
 
-    if (detector.points) {
+    if (DEBUG && detector.points) {
       const pointsRun = detector.points.find(
         (point) => point.tagname === "run"
       );
@@ -117,6 +120,25 @@ async function capture() {
               h: pointsRun.h,
             },
             { B: 255, G: 0, R: 0 }
+          );
+        });
+      }
+
+      const pointsHorde = detector.points.find(
+        (point) => point.tagname === "horda"
+      );
+
+      if (pointsHorde && pointsHorde.locations.length > 0) {
+        pointsHorde.locations.forEach((point) => {
+          vision.draw_rectangles(
+            detector.screenshot,
+            {
+              x: point.x,
+              y: point.y,
+              w: pointsHorde.w,
+              h: pointsHorde.h,
+            },
+            { B: 0, G: 0, R: 255 }
           );
         });
       }
@@ -179,68 +201,90 @@ async function bot() {
         break;
       case BOT_STAGES.FARMING:
         console.log("BOT_STAGES.FARMING");
-        for (let num of Array.from(Array(16).keys())) {
-          if (num > routePosition) {
-            routePosition = num;
-            await loopFarmRoutePosition(num);
-            if (
-              detector.points &&
-              detector.points.find((point) => point.tagname === "hp").locations
-                .length > 0
-            ) {
-              console.log("routePosition", routePosition);
-              execCapture = false;
-              bot_stage = BOT_STAGES.BATTLE;
-              break;
-            }
-          }
+        // for (let num of Array.from(Array(16).keys())) {
+        //   if (num > routePosition) {
+        //     routePosition = num;
+        //     await loopFarmRoutePosition(num);
+        //     if (
+        //       detector.points &&
+        //       detector.points.find((point) => point.tagname === "hp").locations
+        //         .length > 0
+        //     ) {
+        //       console.log("routePosition", routePosition);
+        //       execCapture = false;
+        //       bot_stage = BOT_STAGES.BATTLE;
+        //       break;
+        //     }
+        //   }
+        // }
+
+        if (
+          detector.points &&
+          detector.points.find((point) => point.tagname === "hp").locations
+            .length > 0
+        ) {
+          // console.log("routePosition", routePosition);
+          execCapture = false;
+          bot_stage = BOT_STAGES.BATTLE;
+          break;
         }
         break;
       case BOT_STAGES.BATTLE:
         console.log("BOT_STAGES.BATTLE");
-        if (atk_qt === 0) {
-          console.log("atk_1");
-          await atk(1);
+        if (
+          detector.points &&
+          detector.points.find((point) => point.tagname === "horda").locations
+            .length > 0
+        ) {
+          await escape();
+          escape_battle = true;
+          bot_stage = BOT_STAGES.BATTLE_OUT;
         } else {
-          if (
-            detector.points &&
-            !detector.points.find(
-              (point) => point.tagname === "enemy_hp_finish"
-            ).locations.length > 0
-          ) {
-            console.log("atk_2");
-            await atk(2);
+          if (atk_qt === 0) {
+            console.log("atk_1");
+            await atk(1);
+          } else {
+            if (
+              detector.points &&
+              !detector.points.find(
+                (point) => point.tagname === "enemy_hp_finish"
+              ).locations.length > 0
+            ) {
+              console.log("atk_2");
+              await atk(2);
+            }
           }
         }
         execCapture = true;
         await sleep(6);
-        console.log("segue o jogo");
         execCapture = false;
         if (
           detector.points &&
           detector.points.find((point) => point.tagname === "run").locations
             .length > 0
         ) {
-          console.log("detection run");
-          pp--;
-          atk_qt = 0;
-          console.log(`restam ${pp}s`);
-          // await controlRun();
-          if (pp === 0) {
-            bot_stage = BOT_STAGES.START;
-          } else {
-            //  move
-            execCapture = true;
-            bot_stage = BOT_STAGES.FARMING;
-          }
+          bot_stage = BOT_STAGES.BATTLE_OUT;
         } else {
           atk_qt++;
         }
         break;
+      case BOT_STAGES.BATTLE_OUT:
+        console.log("BOT_STAGES.BATTLE_OUT");
+        if (!escape_battle) {
+          pp--;
+        }
+        atk_qt = 0;
+        console.log(`restam ${pp}s`);
+        if (pp === 0) {
+          bot_stage = BOT_STAGES.START;
+        } else {
+          execCapture = true;
+          bot_stage = BOT_STAGES.FARMING;
+        }
       default:
         break;
     }
-    console.log("bot out");
+    console.log("bot run out");
     runbot = false;
   }
 }
