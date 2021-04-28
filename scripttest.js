@@ -1,7 +1,9 @@
 const robot = require("robotjs");
 const sleep = require("./src/utils/sleep");
-const { moveStep } = require("./src/utils/steps");
-const { loopFarm } = require("./src/farms/money/loopFarm");
+const { moveStep, moveBike } = require("./src/utils/steps");
+const { goToFarm } = require("./src/farms/money/goToFarm");
+const { exitCenter } = require("./src/farms/money/exitCenter");
+const { goToCenter } = require("./src/game/goToCenter");
 const configs = require("./config.json");
 
 
@@ -9,28 +11,13 @@ async function run() {
   await sleep(4);
   console.log("run")
 
+  await goToCenter();
+  await exitCenter();
+  await goToFarm();
 
-  for (let num of Array.from(Array(5).keys())) {
-    await loopFarm();
-  }
+  console.log("fim")
 
-
-
-
-
-  await loopFarm();
-  // robot.keyToggle(configs.keys.left, "down");
-  // // await sleep(0.01);
-  // robot.keyToggle(configs.keys.left, "up");
-
-  // robot.keyToggle(configs.keys.left, "down");
-  // // await sleep(0.01);
-  // robot.keyToggle(configs.keys.left, "up");
-
-  // robot.keyToggle(configs.keys.left, "down");
-  // await sleep(0.01);
-  // robot.keyToggle(configs.keys.left, "up");
-
+  await run();
 }
 
 

@@ -9,7 +9,7 @@ const { healCenter } = require("../../game/healCenter");
 const { atk } = require("../../game/atk");
 const { goToFarm } = require("./goToFarm");
 const { exitCenter } = require("./exitCenter");
-// const { loopFarm } = require("./loopFarm");
+const { loopFarmRoutePosition } = require("./loopFarm");
 const configs = require("../../../config.json");
 
 const sleep = require("../../utils/sleep");
@@ -86,6 +86,7 @@ let bot_stage = BOT_STAGES.START;
 let atk_qt = 0;
 let pp = configs.amount_uses.pp;
 let runbot = false;
+let routePosition = -1;
 // const time = new Date().getTime();
 
 let execCapture = false;
@@ -173,19 +174,26 @@ async function bot() {
         console.log("BOT_STAGES.GO_TO_FARM");
         await goToFarm();
         bot_stage = BOT_STAGES.FARMING;
+        execCapture = true;
+        await sleep(4);
         break;
       case BOT_STAGES.FARMING:
         console.log("BOT_STAGES.FARMING");
-        execCapture = true;
-        await sleep(4);
-        // loopFarm();
-        if (
-          detector.points &&
-          detector.points.find((point) => point.tagname === "hp").locations
-            .length > 0
-        ) {
-          execCapture = false;
-          bot_stage = BOT_STAGES.BATTLE;
+        for (let num of Array.from(Array(16).keys())) {
+          if (num > routePosition) {
+            routePosition = num;
+            await loopFarmRoutePosition(num);
+            if (
+              detector.points &&
+              detector.points.find((point) => point.tagname === "hp").locations
+                .length > 0
+            ) {
+              console.log("routePosition", routePosition);
+              execCapture = false;
+              bot_stage = BOT_STAGES.BATTLE;
+              break;
+            }
+          }
         }
         break;
       case BOT_STAGES.BATTLE:
@@ -222,6 +230,7 @@ async function bot() {
             bot_stage = BOT_STAGES.START;
           } else {
             //  move
+            execCapture = true;
             bot_stage = BOT_STAGES.FARMING;
           }
         } else {

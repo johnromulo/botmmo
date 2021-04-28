@@ -30,16 +30,16 @@ async function moveBike(direction, qt_steps) {
     const result = qt_steps - 3;
     const arr = Array.from(Array((result / 2) + 1).keys());
     for (let num of arr) {
-      if (arr.length === num + 1) {
+      if (arr.length === (num + 1)) {
         console.log("moveBike3 - S3", direction, num);
         robot.keyToggle(direction, "down");
-        await sleep(0.1);
+        await sleep(0.05);
         robot.keyToggle(direction, "up");
+        break;
       } else {
         console.log("moveBike3 - S2", direction, num);
         robot.keyToggle(direction, "down");
         robot.keyToggle(direction, "up");
-        await sleep(0.01);
       }
     }
 
