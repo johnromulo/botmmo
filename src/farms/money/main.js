@@ -22,13 +22,13 @@ const detection_objects = [
     threshold: 0.98,
   },
   {
-    path: "./images/battledetect/enemy_hp.jpg",
-    tagname: "enemy_hp",
-    threshold: 0.98,
-  },
-  {
     path: "./images/battledetect/my_hp.jpg",
     tagname: "hp",
+    threshold: 0.94,
+  },
+  {
+    path: "./images/battledetect/enemy_hp.jpg",
+    tagname: "enemy_hp",
     threshold: 0.98,
   },
   {
@@ -176,7 +176,6 @@ async function capture() {
 }
 
 async function bot() {
-  console.log("bot");
   if (!runbot) {
     console.log("bot run");
     runbot = true;
@@ -201,33 +200,38 @@ async function bot() {
         break;
       case BOT_STAGES.FARMING:
         console.log("BOT_STAGES.FARMING");
-        // for (let num of Array.from(Array(16).keys())) {
-        //   if (num > routePosition) {
-        //     routePosition = num;
-        //     await loopFarmRoutePosition(num);
-        //     if (
-        //       detector.points &&
-        //       detector.points.find((point) => point.tagname === "hp").locations
-        //         .length > 0
-        //     ) {
-        //       console.log("routePosition", routePosition);
-        //       execCapture = false;
-        //       bot_stage = BOT_STAGES.BATTLE;
-        //       break;
-        //     }
-        //   }
-        // }
-
-        if (
-          detector.points &&
-          detector.points.find((point) => point.tagname === "hp").locations
-            .length > 0
-        ) {
-          // console.log("routePosition", routePosition);
-          execCapture = false;
-          bot_stage = BOT_STAGES.BATTLE;
-          break;
+        for (let num of Array.from(Array(22).keys())) {
+          if (
+            detector.points &&
+            detector.points.find((point) => point.tagname === "hp").locations
+              .length > 0
+          ) {
+            console.log("routePosition", routePosition);
+            execCapture = false;
+            bot_stage = BOT_STAGES.BATTLE;
+            break;
+          } else {
+            if (num > routePosition) {
+              console.log("step", num);
+              routePosition = num;
+              await loopFarmRoutePosition(routePosition);
+              console.log("end step", num);
+            }
+          }
         }
+        routePosition = -1;
+        console.log("end loop");
+
+        // if (
+        //   detector.points &&
+        //   detector.points.find((point) => point.tagname === "hp").locations
+        //     .length > 0
+        // ) {
+        //   // console.log("routePosition", routePosition);
+        //   execCapture = false;
+        //   bot_stage = BOT_STAGES.BATTLE;
+        //   break;
+        // }
         break;
       case BOT_STAGES.BATTLE:
         console.log("BOT_STAGES.BATTLE");
@@ -241,6 +245,7 @@ async function bot() {
           bot_stage = BOT_STAGES.BATTLE_OUT;
         } else {
           if (atk_qt === 0) {
+            escape_battle = false;
             console.log("atk_1");
             await atk(1);
           } else {

@@ -6,9 +6,11 @@ const sleep = require("../utils/sleep");
 async function moveStep(direction, qt_steps) {
   for (let num of Array.from(Array(qt_steps).keys())) {
     robot.keyToggle(direction, "down");
-    await sleep(0.097);
+    // await sleep(qt_steps * 200 / 1000);
+    // await sleep((qt_steps * 165 + qt_steps * 20) / 1000);
+    // await sleep(0.097);
     robot.keyToggle(direction, "up");
-    await sleep(0.097);
+    // await sleep(0.45);
   }
 }
 

@@ -2,13 +2,13 @@ const cv = require("opencv4nodejs");
 
 async function run() {
   const screenshot = await cv.imreadAsync(
-    "./images/hd/horda.jpg",
+    "./images/hd/single_battle_2.jpg",
     cv.IMREAD_UNCHANGED
   );
 
-  const threshold = 0.95;
+  const threshold = 0.94;
   const needle = await cv.imreadAsync(
-    "./images/battledetect/horder.jpg",
+    "./images/battledetect/my_hp.jpg",
     cv.IMREAD_UNCHANGED
   );
 
@@ -41,7 +41,7 @@ async function run() {
     });
 
     const needle2 = await cv.imreadAsync(
-      "./images/battledetect/my_hp.jpg",
+      "./images/battledetect/horder.jpg",
       cv.IMREAD_UNCHANGED
     );
 

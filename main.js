@@ -19,7 +19,7 @@ const detection_objects = [
   {
     path: "./images/battledetect/my_hp.jpg",
     tagname: "hp",
-    threshold: 0.98,
+    threshold: 0.94,
   },
   {
     path: "./images/battledetect/evolution.jpg",
@@ -90,6 +90,8 @@ async function run() {
   // }
 
   if (detector.points) {
+    console.log("detector.points", detector.points)
+
     const pointsRun = detector.points.find((point) => point.tagname === "run");
     if (pointsRun && pointsRun.locations.length > 0) {
       pointsRun.locations.forEach((point) => {
@@ -107,6 +109,7 @@ async function run() {
     }
 
     const pointsMyHp = detector.points.find((point) => point.tagname === "hp");
+    console.log("pointsMyHp", pointsMyHp)
     if (pointsMyHp && pointsMyHp.locations.length > 0) {
       pointsMyHp.locations.forEach((point) => {
         vision.draw_rectangles(
