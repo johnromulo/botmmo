@@ -6,9 +6,9 @@ const sleep = require("../utils/sleep");
 async function moveStep(direction, qt_steps) {
   for (let num of Array.from(Array(qt_steps).keys())) {
     robot.keyToggle(direction, "down");
-    await sleep(0.1);
+    await sleep(0.05);
     robot.keyToggle(direction, "up");
-    await sleep(1);
+    await sleep(0.2);
   }
 }
 

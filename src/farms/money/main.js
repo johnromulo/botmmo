@@ -295,7 +295,7 @@ async function bot() {
 }
 
 async function run() {
-  await capture();
+  capture();
   bot();
 
   await sleep(1);

@@ -3,13 +3,14 @@ const sleep = require("./src/utils/sleep");
 const { moveStep, moveBike } = require("./src/utils/steps");
 const { goToFarm } = require("./src/farms/money/goToFarm");
 const { exitCenter } = require("./src/farms/money/exitCenter");
-const { loopFarmRoutePosition, loopFarm } = require("./src/farms/money/loopFarm");
+const {
+  loopFarmRoutePosition,
+  loopFarm,
+} = require("./src/farms/money/loopFarm");
 const { goToCenter } = require("./src/game/goToCenter");
 const configs = require("./config.json");
 
 async function run() {
-
-
   await sleep(5);
   console.log("run");
 
@@ -25,6 +26,10 @@ async function run() {
   //   console.timeEnd("tap");
   // }
 
+  // await moveStep(configs.keys.left, 9);
+  // await moveStep(configs.keys.down, 5);
+
+  // await loopFarm();
   console.time("tap");
   let routePosition = -1;
   for (let num of Array.from(Array(step).keys())) {
@@ -35,37 +40,37 @@ async function run() {
   }
   console.timeEnd("tap");
 
-  // for (let num of Array.from(Array(step).keys())) {
-  //   routePosition = num;
-  //   console.log("routePosition", routePosition);
-  //   await loopFarmRoutePosition(routePosition);
-  //   if (num === 4) {
-  //     break;
-  //   }
-  // }
+  for (let num of Array.from(Array(step).keys())) {
+    routePosition = num;
+    console.log("routePosition", routePosition);
+    await loopFarmRoutePosition(routePosition);
+    if (num === 4) {
+      break;
+    }
+  }
 
-  // await sleep(2);
+  await sleep(2);
 
-  // for (let num of Array.from(Array(step).keys())) {
-  //   routePosition = num;
-  //   console.log("routePosition", routePosition);
-  //   if (num > 4) {
-  //     await loopFarmRoutePosition(routePosition);
-  //   }
-  //   if (num === 9) {
-  //     break;
-  //   }
-  // }
+  for (let num of Array.from(Array(step).keys())) {
+    routePosition = num;
+    console.log("routePosition", routePosition);
+    if (num > 4) {
+      await loopFarmRoutePosition(routePosition);
+    }
+    if (num === 9) {
+      break;
+    }
+  }
 
-  // await sleep(2);
+  await sleep(2);
 
-  // for (let num of Array.from(Array(step).keys())) {
-  //   routePosition = num;
-  //   console.log("routePosition", routePosition);
-  //   if (num > 9) {
-  //     await loopFarmRoutePosition(routePosition);
-  //   }
-  // }
+  for (let num of Array.from(Array(step).keys())) {
+    routePosition = num;
+    console.log("routePosition", routePosition);
+    if (num > 9) {
+      await loopFarmRoutePosition(routePosition);
+    }
+  }
   // await run();
 }
 
