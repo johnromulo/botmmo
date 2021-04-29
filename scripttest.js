@@ -8,31 +8,34 @@ const { goToCenter } = require("./src/game/goToCenter");
 const configs = require("./config.json");
 
 async function run() {
-  await sleep(4);
+
+
+  await sleep(5);
   console.log("run");
 
+  // robot.setKeyboardDelay(1);
+  const step = 22;
+  // for (let num of Array.from(Array(step).keys())) {
+  //   console.log("num", num);
+  //   console.time("tap");
+  //   robot.keyToggle(configs.keys.left, "down");
+  //   await sleep(0.1);
+  //   robot.keyToggle(configs.keys.left, "up");
+  //   await sleep(0.2);
+  //   console.timeEnd("tap");
+  // }
 
-  const step = 6;
   console.time("tap");
-  robot.setKeyboardDelay(1);
-  const sec = 1 * 1000;
-  robot.keyToggle(configs.keys.left, "down");
-  await sleep(sec);
-  robot.keyToggle(configs.keys.left, "up");
+  let routePosition = -1;
+  for (let num of Array.from(Array(step).keys())) {
+    if (num > routePosition) {
+      routePosition = num;
+      await loopFarmRoutePosition(routePosition);
+    }
+  }
   console.timeEnd("tap");
 
-  // console.time("tap");
-  // let routePosition = -1;
-  // for (let num of Array.from(Array(22).keys())) {
-  //   if (num > routePosition) {
-  //     routePosition = num;
-  //     console.log("routePosition", routePosition);
-  //     await loopFarmRoutePosition(routePosition);
-  //   }
-  // }
-  // console.timeEnd("tap");
-
-  // for (let num of Array.from(Array(16).keys())) {
+  // for (let num of Array.from(Array(step).keys())) {
   //   routePosition = num;
   //   console.log("routePosition", routePosition);
   //   await loopFarmRoutePosition(routePosition);
@@ -43,7 +46,7 @@ async function run() {
 
   // await sleep(2);
 
-  // for (let num of Array.from(Array(16).keys())) {
+  // for (let num of Array.from(Array(step).keys())) {
   //   routePosition = num;
   //   console.log("routePosition", routePosition);
   //   if (num > 4) {
@@ -56,7 +59,7 @@ async function run() {
 
   // await sleep(2);
 
-  // for (let num of Array.from(Array(16).keys())) {
+  // for (let num of Array.from(Array(step).keys())) {
   //   routePosition = num;
   //   console.log("routePosition", routePosition);
   //   if (num > 9) {

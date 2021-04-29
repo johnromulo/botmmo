@@ -11,50 +11,51 @@ async function loopFarm() {
   await moveStep(configs.keys.up, 4);
 }
 
-async function loopFarmRoutePosition(routePositon) {
-  if (routePositon === 0) {
+async function loopFarmRoutePosition(routePosition) {
+  console.log("routePosition", routePosition);
+  if (routePosition === 0) {
     await moveBike(configs.keys.left, 1);
-  } else if (routePositon === 1) {
+  } else if (routePosition === 1) {
     await moveBike(configs.keys.left, 1);
-  } else if (routePositon === 2) {
+  } else if (routePosition === 2) {
     await moveBike(configs.keys.down, 1);
-  } else if (routePositon === 3) {
+  } else if (routePosition === 3) {
     await moveBike(configs.keys.down, 1);
-  } else if (routePositon === 4) {
+  } else if (routePosition === 4) {
     await moveBike(configs.keys.down, 1);
-  } else if (routePositon === 5) {
+  } else if (routePosition === 5) {
     await moveBike(configs.keys.left, 1);
-  } else if (routePositon === 6) {
+  } else if (routePosition === 6) {
     await moveBike(configs.keys.left, 1);
-  } else if (routePositon === 7) {
+  } else if (routePosition === 7) {
     await moveBike(configs.keys.left, 1);
-  } else if (routePositon === 8) {
+  } else if (routePosition === 8) {
     await moveBike(configs.keys.left, 1);
-  } else if (routePositon === 9) {
+  } else if (routePosition === 9) {
     await moveBike(configs.keys.left, 1);
-  } else if (routePositon === 10) {
+  } else if (routePosition === 10) {
     await moveBike(configs.keys.down, 1);
-  } else if (routePositon === 11) {
+  } else if (routePosition === 11) {
     await moveBike(configs.keys.down, 1);
-  } else if (routePositon === 12) {
+  } else if (routePosition === 12) {
     await moveBike(configs.keys.right, 1);
-  } else if (routePositon === 13) {
+  } else if (routePosition === 13) {
     await moveBike(configs.keys.right, 1);
-  } else if (routePositon === 14) {
+  } else if (routePosition === 14) {
     await moveBike(configs.keys.right, 1);
-  } else if (routePositon === 15) {
+  } else if (routePosition === 15) {
     await moveBike(configs.keys.right, 1);
-  } else if (routePositon === 16) {
+  } else if (routePosition === 16) {
     await moveBike(configs.keys.right, 1);
-  } else if (routePositon === 17) {
+  } else if (routePosition === 17) {
     await moveBike(configs.keys.right, 1);
-  } else if (routePositon === 18) {
+  } else if (routePosition === 18) {
     await moveBike(configs.keys.up, 1);
-  } else if (routePositon === 19) {
+  } else if (routePosition === 19) {
     await moveBike(configs.keys.up, 1);
-  } else if (routePositon === 20) {
+  } else if (routePosition === 20) {
     await moveBike(configs.keys.up, 1);
-  } else if (routePositon === 21) {
+  } else if (routePosition === 21) {
     await moveBike(configs.keys.up, 1);
   }
 }
