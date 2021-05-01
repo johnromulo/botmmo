@@ -54,7 +54,8 @@ const detection_objects = [
 ];
 
 // OpenJDK Platform binary;
-const wincap = new WindowCapture("PokeMMO\0");
+// const wincap = new WindowCapture("PokeMMO\0");
+const wincap = new WindowCapture("Sem título - Bloco de Notas\0");
 // const wincap = new WindowCapture("OpenJDK Platform binary\0");
 const vision = new Vision();
 const detector = new Detection(detection_objects);
@@ -65,34 +66,22 @@ const finish = false;
 let time = new Date().getTime();
 detector.start();
 
-console.log("obj", detector.objects.find((obj) => obj.tagname === "hp"));
-detector.objects.find((obj) => obj.tagname === "hp").stopDetection = false;
 
 async function run() {
 
   const print = await wincap.print();
 
-  const base64Data = print.replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '');
+  const base64Data = print
+    .replace("data:image/jpeg;base64,", "")
+    .replace("data:image/png;base64,", "");
 
-  detector.run(Buffer.from(base64Data, 'base64'));
+  await detector.run(Buffer.from(base64Data, "base64"));
+  // detector.run(print);
 
-  // if (detector.points) {
-  //   const pointsHorder = await detector.points.find(point => point.tagname === 'hp');
-  //   console.log("pointsHorder", pointsHorder);
-
-  //   if (pointsHorder && pointsHorder.locations.length > 0) {
-  //     pointsHorder.locations.forEach(point => {
-  //       vision.draw_rectangles(detector.screenshot, {
-  //         x: point.x, y: point.y, w: pointsHorder.w, h: pointsHorder.h
-  //       }, { B: 0, G: 255, R: 0 });
-  //     });
-  //   }
-  // }
-
-  if (detector.points) {
-    console.log("detector.points", detector.points)
-
-    const pointsRun = detector.points.find((point) => point.tagname === "run");
+  if (DEBUG && detector.points) {
+    const pointsRun = detector.points.find(
+      (point) => point.tagname === "run"
+    );
     if (pointsRun && pointsRun.locations.length > 0) {
       pointsRun.locations.forEach((point) => {
         vision.draw_rectangles(
@@ -108,8 +97,28 @@ async function run() {
       });
     }
 
-    const pointsMyHp = detector.points.find((point) => point.tagname === "hp");
-    console.log("pointsMyHp", pointsMyHp)
+    const pointsHorde = detector.points.find(
+      (point) => point.tagname === "horda"
+    );
+
+    if (pointsHorde && pointsHorde.locations.length > 0) {
+      pointsHorde.locations.forEach((point) => {
+        vision.draw_rectangles(
+          detector.screenshot,
+          {
+            x: point.x,
+            y: point.y,
+            w: pointsHorde.w,
+            h: pointsHorde.h,
+          },
+          { B: 0, G: 0, R: 255 }
+        );
+      });
+    }
+
+    const pointsMyHp = detector.points.find(
+      (point) => point.tagname === "hp"
+    );
     if (pointsMyHp && pointsMyHp.locations.length > 0) {
       pointsMyHp.locations.forEach((point) => {
         vision.draw_rectangles(
@@ -126,7 +135,8 @@ async function run() {
     }
   }
 
-  if (DEBUG) {
+  if (DEBUG && detector.screenshot) {
+    console.log("show");
     cv.imshow("Debug", detector.screenshot);
     const key = cv.waitKey(1);
     if (key === 113) {
@@ -135,6 +145,7 @@ async function run() {
       cv.destroyAllWindows();
     }
   }
+
 
   console.log("FPS: ", (1000 / (new Date().getTime() - time)).toFixed(2));
   time = new Date().getTime();

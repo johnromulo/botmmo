@@ -34,43 +34,45 @@ async function run() {
   let routePosition = -1;
   for (let num of Array.from(Array(step).keys())) {
     if (num > routePosition) {
+      console.time("tap");
       routePosition = num;
       await loopFarmRoutePosition(routePosition);
-    }
-  }
-  console.timeEnd("tap");
-
-  for (let num of Array.from(Array(step).keys())) {
-    routePosition = num;
-    console.log("routePosition", routePosition);
-    await loopFarmRoutePosition(routePosition);
-    if (num === 4) {
-      break;
+      console.timeEnd("tap");
     }
   }
 
-  await sleep(2);
 
-  for (let num of Array.from(Array(step).keys())) {
-    routePosition = num;
-    console.log("routePosition", routePosition);
-    if (num > 4) {
-      await loopFarmRoutePosition(routePosition);
-    }
-    if (num === 9) {
-      break;
-    }
-  }
+  // for (let num of Array.from(Array(step).keys())) {
+  //   routePosition = num;
+  //   console.log("routePosition", routePosition);
+  //   await loopFarmRoutePosition(routePosition);
+  //   if (num === 4) {
+  //     break;
+  //   }
+  // }
 
-  await sleep(2);
+  // await sleep(2);
 
-  for (let num of Array.from(Array(step).keys())) {
-    routePosition = num;
-    console.log("routePosition", routePosition);
-    if (num > 9) {
-      await loopFarmRoutePosition(routePosition);
-    }
-  }
+  // for (let num of Array.from(Array(step).keys())) {
+  //   routePosition = num;
+  //   console.log("routePosition", routePosition);
+  //   if (num > 4) {
+  //     await loopFarmRoutePosition(routePosition);
+  //   }
+  //   if (num === 9) {
+  //     break;
+  //   }
+  // }
+
+  // await sleep(2);
+
+  // for (let num of Array.from(Array(step).keys())) {
+  //   routePosition = num;
+  //   console.log("routePosition", routePosition);
+  //   if (num > 9) {
+  //     await loopFarmRoutePosition(routePosition);
+  //   }
+  // }
   // await run();
 }
 

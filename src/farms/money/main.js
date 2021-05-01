@@ -64,7 +64,8 @@ const detection_objects = [
 ];
 
 // OpenJDK Platform binary;
-const wincap = new WindowCapture("PokeMMO\0");
+// const wincap = new WindowCapture("PokeMMO\0");
+const wincap = new WindowCapture("Sem título - Bloco de Notas\0");
 // const wincap = new WindowCapture("OpenJDK Platform binary\0");
 const vision = new Vision();
 const detector = new Detection(detection_objects);
@@ -93,8 +94,10 @@ let escape_battle = false;
 // const time = new Date().getTime();
 
 let execCapture = false;
+let runCapture = false;
 async function capture() {
-  if (execCapture) {
+  if (execCapture && !runCapture) {
+    runCapture = true;
     console.log("capture");
     const print = await wincap.print();
 
@@ -102,7 +105,7 @@ async function capture() {
       .replace("data:image/jpeg;base64,", "")
       .replace("data:image/png;base64,", "");
 
-    detector.run(Buffer.from(base64Data, "base64"));
+    await detector.run(Buffer.from(base64Data, "base64"));
     // detector.run(print);
 
     if (DEBUG && detector.points) {
@@ -172,8 +175,13 @@ async function capture() {
         cv.destroyAllWindows();
       }
     }
+
+    runCapture = false;
   }
 }
+
+let execLoopFarm = false;
+let iteractionsLoopFarm = 0;
 
 async function bot() {
   if (!runbot) {
@@ -182,18 +190,18 @@ async function bot() {
     switch (bot_stage) {
       case BOT_STAGES.START:
         console.log("BOT_STAGES.START");
-        await goToCenter();
+        // await goToCenter();
         bot_stage = BOT_STAGES.CENTER;
         break;
       case BOT_STAGES.CENTER:
         console.log("BOT_STAGES.CENTER");
-        await healCenter();
-        await exitCenter();
+        // await healCenter();
+        // await exitCenter();
         bot_stage = BOT_STAGES.GO_TO_FARM;
         break;
       case BOT_STAGES.GO_TO_FARM:
         console.log("BOT_STAGES.GO_TO_FARM");
-        await goToFarm();
+        // await goToFarm();
         bot_stage = BOT_STAGES.FARMING;
         execCapture = true;
         await sleep(4);
@@ -201,22 +209,24 @@ async function bot() {
       case BOT_STAGES.FARMING:
         console.log("BOT_STAGES.FARMING");
         for (let num of Array.from(Array(22).keys())) {
+          if (num > routePosition) {
+            console.log("step", num);
+            console.time("stp");
+            routePosition = num;
+            await loopFarmRoutePosition(routePosition);
+            console.timeEnd("stp");
+            console.log("end step", num);
+          }
+
           if (
             detector.points &&
+            detector.points.length > 0 &&
             detector.points.find((point) => point.tagname === "hp").locations
               .length > 0
           ) {
-            console.log("routePosition", routePosition);
             execCapture = false;
             bot_stage = BOT_STAGES.BATTLE;
             break;
-          } else {
-            if (num > routePosition) {
-              console.log("step", num);
-              routePosition = num;
-              await loopFarmRoutePosition(routePosition);
-              console.log("end step", num);
-            }
           }
         }
         routePosition = -1;
@@ -295,8 +305,8 @@ async function bot() {
 }
 
 async function run() {
-  capture();
   bot();
+  // capture();
 
   await sleep(1);
   if (!finish) {
@@ -314,7 +324,7 @@ async function init() {
   console.log("init");
   await sleep(15);
   console.log("run");
-  await run();
+  run();
 }
 
 init();

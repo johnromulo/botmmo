@@ -1,5 +1,4 @@
 const cv = require("opencv4nodejs");
-// const { Worker,  isMainThread, parentPort } = require("worker_threads");
 
 class Detection {
   stopped = true;
@@ -27,8 +26,8 @@ class Detection {
     this.stopped = true;
   }
 
-  run(screenshot) {
-    this.screenshot = cv.imdecode(screenshot, cv.IMREAD_UNCHANGED);
+  async run(screenshot) {
+    this.screenshot = await cv.imdecodeAsync(screenshot, cv.IMREAD_UNCHANGED);
     if (!this.stopped && this.screenshot) {
       this.points = this.objects.map((obj) => {
         // if (!obj.stopDetection) {
