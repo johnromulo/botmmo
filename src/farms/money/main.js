@@ -171,6 +171,7 @@ async function bot() {
         } else {
           workerProcess.postMessage({ execRun: true });
           await resetRoute();
+          routePosition = 18;
           bot_stage = BOT_STAGES.FARMING;
         }
       default:
