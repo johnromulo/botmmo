@@ -1,8 +1,4 @@
-const cv = require("opencv4nodejs");
-
-const Detection = require("../../Classes/Detection");
-const Vision = require("../../Classes/Vision");
-const WindowCapture = require("../../Classes/WindowCapture");
+const { Worker } = require('shinobi-worker');
 
 const { goToCenter } = require("../../game/goToCenter");
 const { healCenter } = require("../../game/healCenter");
@@ -11,71 +7,15 @@ const { escape } = require("../../game/escape");
 const { goToFarm } = require("./goToFarm");
 const { exitCenter } = require("./exitCenter");
 const { loopFarmRoutePosition } = require("./loopFarm");
+const { resetRoute } = require("./resetRoute");
 const configs = require("../../../config.json");
 
 const sleep = require("../../utils/sleep");
+const { restTime } = require("../../utils/restTime");
 
-const detection_objects = [
-  {
-    path: "./images/battledetect/horder.jpg",
-    tagname: "horda",
-    threshold: 0.98,
-  },
-  {
-    path: "./images/battledetect/my_hp.jpg",
-    tagname: "hp",
-    threshold: 0.94,
-  },
-  {
-    path: "./images/battledetect/enemy_hp.jpg",
-    tagname: "enemy_hp",
-    threshold: 0.98,
-  },
-  {
-    path: "./images/battledetect/evolution.jpg",
-    tagname: "evolution",
-    threshold: 0.995,
-  },
-  {
-    path: "./images/battledetect/cancel_btn_evolution.jpg",
-    tagname: "cancel_btn_evolution",
-    threshold: 0.98,
-  },
-  {
-    path: "./images/battledetect/new_atk.jpg",
-    tagname: "new_atk",
-    threshold: 0.98,
-  },
-  {
-    path: "./images/battledetect/cancel_btn_new_atk.jpg",
-    tagname: "cancel_btn_new_atk",
-    threshold: 0.98,
-  },
-  {
-    path: "./images/battledetect/run.jpg",
-    tagname: "run",
-    threshold: 0.85,
-  },
-  {
-    path: "./images/battledetect/enemy_hp_finish.jpg",
-    tagname: "enemy_hp_finish",
-    threshold: 0.98,
-  },
-];
-
-// OpenJDK Platform binary;
-// const wincap = new WindowCapture("PokeMMO\0");
-const wincap = new WindowCapture("Sem título - Bloco de Notas\0");
-// const wincap = new WindowCapture("OpenJDK Platform binary\0");
-const vision = new Vision();
-const detector = new Detection(detection_objects);
-
-const DEBUG = true;
 let finish = false;
 
 // let time = new Date().getTime();
-detector.start();
-
 const BOT_STAGES = {
   START: 0,
   CENTER: 1,
@@ -83,6 +23,7 @@ const BOT_STAGES = {
   FARMING: 3,
   BATTLE: 4,
   BATTLE_OUT: 5,
+  REST_TIME: 6
 };
 
 let bot_stage = BOT_STAGES.START;
@@ -93,95 +34,46 @@ let routePosition = -1;
 let escape_battle = false;
 // const time = new Date().getTime();
 
-let execCapture = false;
-let runCapture = false;
-async function capture() {
-  if (execCapture && !runCapture) {
-    runCapture = true;
-    console.log("capture");
-    const print = await wincap.print();
-
-    const base64Data = print
-      .replace("data:image/jpeg;base64,", "")
-      .replace("data:image/png;base64,", "");
-
-    await detector.run(Buffer.from(base64Data, "base64"));
-    // detector.run(print);
-
-    if (DEBUG && detector.points) {
-      const pointsRun = detector.points.find(
-        (point) => point.tagname === "run"
-      );
-      if (pointsRun && pointsRun.locations.length > 0) {
-        pointsRun.locations.forEach((point) => {
-          vision.draw_rectangles(
-            detector.screenshot,
-            {
-              x: point.x,
-              y: point.y,
-              w: pointsRun.w,
-              h: pointsRun.h,
-            },
-            { B: 255, G: 0, R: 0 }
-          );
-        });
-      }
-
-      const pointsHorde = detector.points.find(
-        (point) => point.tagname === "horda"
-      );
-
-      if (pointsHorde && pointsHorde.locations.length > 0) {
-        pointsHorde.locations.forEach((point) => {
-          vision.draw_rectangles(
-            detector.screenshot,
-            {
-              x: point.x,
-              y: point.y,
-              w: pointsHorde.w,
-              h: pointsHorde.h,
-            },
-            { B: 0, G: 0, R: 255 }
-          );
-        });
-      }
-
-      const pointsMyHp = detector.points.find(
-        (point) => point.tagname === "hp"
-      );
-      if (pointsMyHp && pointsMyHp.locations.length > 0) {
-        pointsMyHp.locations.forEach((point) => {
-          vision.draw_rectangles(
-            detector.screenshot,
-            {
-              x: point.x,
-              y: point.y,
-              w: pointsMyHp.w,
-              h: pointsMyHp.h,
-            },
-            { B: 0, G: 255, R: 0 }
-          );
-        });
-      }
+let detector_points = [];
+let workerProcess = null;
+const createNewProcess = async () => {
+  // set the first parameter as a string.
+  const pathToWorkerScript = __dirname + '../../../utils/workerWindowCapture.js'
+  // if you want to pass argument on execution you may set it as an Array as shown on the line below.
+  // const pathToWorkerScript = [__dirname + '/newThread.js','argument1','argument2']
+  workerProcess = Worker(
+    pathToWorkerScript,
+    {
+      json: true,
+      debug: true,
     }
+  )
 
-    if (DEBUG && detector.screenshot) {
-      console.log("show");
-      cv.imshow("Debug", detector.screenshot);
-      const key = cv.waitKey(1);
-      if (key === 113) {
-        finish = true;
-        detector.stop();
-        cv.destroyAllWindows();
-      }
+  workerProcess.on('message', function (data) {
+    // data from worker. if `json` is `true` then your data will be parsed into json automatically.
+    console.log("data", data);
+    if (data.detector_points) {
+      detector_points = data.detector_points;
     }
+  })
+  workerProcess.on('close', function () {
+    // things to do after worker closes
+    console.log("close");
+  })
+  workerProcess.on('error', function (data) {
+    // errors from the worker process and/or script.
+    console.log("error", data);
 
-    runCapture = false;
-  }
+  })
+  workerProcess.on('failedParse', function (stringThatFailedToParse) {
+    // only work when `debug` is `true` in Worker options.
+    console.log("failedParse", stringThatFailedToParse);
+  })
+
+  // workerProcess is an Emitter.
+  // it also contains a direct handle to the `spawn` at `workerProcess.spawnProcess`
+  return workerProcess
 }
-
-let execLoopFarm = false;
-let iteractionsLoopFarm = 0;
 
 async function bot() {
   if (!runbot) {
@@ -190,20 +82,20 @@ async function bot() {
     switch (bot_stage) {
       case BOT_STAGES.START:
         console.log("BOT_STAGES.START");
-        // await goToCenter();
+        await goToCenter();
         bot_stage = BOT_STAGES.CENTER;
         break;
       case BOT_STAGES.CENTER:
         console.log("BOT_STAGES.CENTER");
-        // await healCenter();
-        // await exitCenter();
+        await healCenter();
+        await exitCenter();
         bot_stage = BOT_STAGES.GO_TO_FARM;
         break;
       case BOT_STAGES.GO_TO_FARM:
         console.log("BOT_STAGES.GO_TO_FARM");
-        // await goToFarm();
+        await goToFarm();
         bot_stage = BOT_STAGES.FARMING;
-        execCapture = true;
+        workerProcess.postMessage({ execRun: true });
         await sleep(4);
         break;
       case BOT_STAGES.FARMING:
@@ -219,12 +111,12 @@ async function bot() {
           }
 
           if (
-            detector.points &&
-            detector.points.length > 0 &&
-            detector.points.find((point) => point.tagname === "hp").locations
+            detector_points &&
+            detector_points.length > 0 &&
+            detector_points.find((point) => point.tagname === "hp").locations
               .length > 0
           ) {
-            execCapture = false;
+            workerProcess.postMessage({ execRun: false });
             bot_stage = BOT_STAGES.BATTLE;
             break;
           }
@@ -233,8 +125,8 @@ async function bot() {
         console.log("end loop");
 
         // if (
-        //   detector.points &&
-        //   detector.points.find((point) => point.tagname === "hp").locations
+        //   detector_points &&
+        //   detector_points.find((point) => point.tagname === "hp").locations
         //     .length > 0
         // ) {
         //   // console.log("routePosition", routePosition);
@@ -246,8 +138,8 @@ async function bot() {
       case BOT_STAGES.BATTLE:
         console.log("BOT_STAGES.BATTLE");
         if (
-          detector.points &&
-          detector.points.find((point) => point.tagname === "horda").locations
+          detector_points &&
+          detector_points.find((point) => point.tagname === "horda").locations
             .length > 0
         ) {
           await escape();
@@ -260,8 +152,8 @@ async function bot() {
             await atk(1);
           } else {
             if (
-              detector.points &&
-              !detector.points.find(
+              detector_points &&
+              !detector_points.find(
                 (point) => point.tagname === "enemy_hp_finish"
               ).locations.length > 0
             ) {
@@ -270,12 +162,12 @@ async function bot() {
             }
           }
         }
-        execCapture = true;
+        workerProcess.postMessage({ execRun: true });
         await sleep(6);
-        execCapture = false;
+        workerProcess.postMessage({ execRun: false });
         if (
-          detector.points &&
-          detector.points.find((point) => point.tagname === "run").locations
+          detector_points &&
+          detector_points.find((point) => point.tagname === "run").locations
             .length > 0
         ) {
           bot_stage = BOT_STAGES.BATTLE_OUT;
@@ -290,10 +182,15 @@ async function bot() {
         }
         atk_qt = 0;
         console.log(`restam ${pp}s`);
+        bot_stage = BOT_STAGES.REST_TIME;
+      case BOT_STAGES.REST_TIME:
+        console.log("BOT_STAGES.REST_TIME");
+        await restTime();
         if (pp === 0) {
           bot_stage = BOT_STAGES.START;
         } else {
-          execCapture = true;
+          workerProcess.postMessage({ execRun: true });
+          await resetRoute();
           bot_stage = BOT_STAGES.FARMING;
         }
       default:
@@ -306,8 +203,6 @@ async function bot() {
 
 async function run() {
   bot();
-  // capture();
-
   await sleep(1);
   if (!finish) {
     run();
@@ -321,6 +216,7 @@ async function run() {
 // detector.objects.find((obj) => obj.tagname === "run").stopDetection = false;
 
 async function init() {
+  createNewProcess();
   console.log("init");
   await sleep(15);
   console.log("run");

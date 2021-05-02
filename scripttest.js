@@ -10,6 +10,8 @@ const {
 const { goToCenter } = require("./src/game/goToCenter");
 const configs = require("./config.json");
 
+const { restTime } = require("./src/utils/restTime");
+
 async function run() {
   await sleep(5);
   console.log("run");
@@ -30,16 +32,16 @@ async function run() {
   // await moveStep(configs.keys.down, 5);
 
   // await loopFarm();
-  console.time("tap");
-  let routePosition = -1;
-  for (let num of Array.from(Array(step).keys())) {
-    if (num > routePosition) {
-      console.time("tap");
-      routePosition = num;
-      await loopFarmRoutePosition(routePosition);
-      console.timeEnd("tap");
-    }
-  }
+  // console.time("tap");
+  // let routePosition = -1;
+  // for (let num of Array.from(Array(step).keys())) {
+  //   if (num > routePosition) {
+  //     console.time("tap");
+  //     routePosition = num;
+  //     await loopFarmRoutePosition(routePosition);
+  //     console.timeEnd("tap");
+  //   }
+  // }
 
 
   // for (let num of Array.from(Array(step).keys())) {
