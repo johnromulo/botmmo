@@ -32,15 +32,11 @@ let pp = configs.amount_uses.pp;
 let runbot = false;
 let routePosition = -1;
 let escape_battle = false;
-// const time = new Date().getTime();
 
 let detector_points = [];
 let workerProcess = null;
 const createNewProcess = async () => {
-  // set the first parameter as a string.
   const pathToWorkerScript = __dirname + '../../../utils/workerWindowCapture.js'
-  // if you want to pass argument on execution you may set it as an Array as shown on the line below.
-  // const pathToWorkerScript = [__dirname + '/newThread.js','argument1','argument2']
   workerProcess = Worker(
     pathToWorkerScript,
     {
@@ -50,28 +46,24 @@ const createNewProcess = async () => {
   )
 
   workerProcess.on('message', function (data) {
-    // data from worker. if `json` is `true` then your data will be parsed into json automatically.
     console.log("data", data);
     if (data.detector_points) {
       detector_points = data.detector_points;
     }
   })
+
   workerProcess.on('close', function () {
-    // things to do after worker closes
     console.log("close");
   })
-  workerProcess.on('error', function (data) {
-    // errors from the worker process and/or script.
-    console.log("error", data);
 
+  workerProcess.on('error', function (data) {
+    console.log("error", data);
   })
+
   workerProcess.on('failedParse', function (stringThatFailedToParse) {
-    // only work when `debug` is `true` in Worker options.
     console.log("failedParse", stringThatFailedToParse);
   })
 
-  // workerProcess is an Emitter.
-  // it also contains a direct handle to the `spawn` at `workerProcess.spawnProcess`
   return workerProcess
 }
 
@@ -109,7 +101,6 @@ async function bot() {
             console.timeEnd("stp");
             console.log("end step", num);
           }
-
           if (
             detector_points &&
             detector_points.length > 0 &&
@@ -123,17 +114,6 @@ async function bot() {
         }
         routePosition = -1;
         console.log("end loop");
-
-        // if (
-        //   detector_points &&
-        //   detector_points.find((point) => point.tagname === "hp").locations
-        //     .length > 0
-        // ) {
-        //   // console.log("routePosition", routePosition);
-        //   execCapture = false;
-        //   bot_stage = BOT_STAGES.BATTLE;
-        //   break;
-        // }
         break;
       case BOT_STAGES.BATTLE:
         console.log("BOT_STAGES.BATTLE");
@@ -208,12 +188,6 @@ async function run() {
     run();
   }
 }
-
-// detector.objects.find((obj) => obj.tagname === "hp").stopDetection = false;
-// detector.objects.find(
-//   (obj) => obj.tagname === "enemy_hp_finish"
-// ).stopDetection = false;
-// detector.objects.find((obj) => obj.tagname === "run").stopDetection = false;
 
 async function init() {
   createNewProcess();
