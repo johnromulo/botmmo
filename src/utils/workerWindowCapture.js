@@ -6,7 +6,7 @@ const WindowCapture = require("../Classes/WindowCapture");
 const Detection = require("../Classes/Detection");
 const Vision = require("../Classes/Vision");
 
-const DEBUG = true;
+const DEBUG = false;
 let execRun = false;
 let runCapture = false;
 

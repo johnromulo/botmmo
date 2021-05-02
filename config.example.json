@@ -20,5 +20,6 @@
   "pause_time": 15,
   "user_discord_id": 0,
   "discord_webhook_id": "",
-  "discord_webhook_token": ""
+  "discord_webhook_token": "",
+  "skip_evoluttion": true
 }

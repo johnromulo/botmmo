@@ -4,6 +4,7 @@ const { goToCenter } = require("../../game/goToCenter");
 const { healCenter } = require("../../game/healCenter");
 const { atk } = require("../../game/atk");
 const { escape } = require("../../game/escape");
+const { skipEvolution } = require("../../game/skipEvolution");
 const { goToFarm } = require("./goToFarm");
 const { exitCenter } = require("./exitCenter");
 const { loopFarmRoutePosition } = require("./loopFarm");
@@ -145,6 +146,20 @@ async function bot() {
         workerProcess.postMessage({ execRun: true });
         await sleep(6);
         workerProcess.postMessage({ execRun: false });
+
+        if (configs.skip_evoluttion) {
+          if (
+            detector_points && (
+              detector_points.find((point) => point.tagname === "cancel_btn_evolution").locations
+                .length > 0 ||
+              detector_points.find((point) => point.tagname === "evolution").locations
+                .length > 0
+            )
+          ) {
+            await skipEvolution();
+          }
+        }
+
         if (
           detector_points &&
           detector_points.find((point) => point.tagname === "run").locations
@@ -187,6 +202,8 @@ async function run() {
   await sleep(1);
   if (!finish) {
     run();
+  } else {
+    workerProcess.kill();
   }
 }
 
