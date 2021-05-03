@@ -5,6 +5,7 @@ const { healCenter } = require("../../game/healCenter");
 const { atk } = require("../../game/atk");
 const { escape } = require("../../game/escape");
 const { skipEvolution } = require("../../game/skipEvolution");
+const { skipNewAtk } = require("../../game/skipNewAtk");
 const { goToFarm } = require("./goToFarm");
 const { exitCenter } = require("./exitCenter");
 const { loopFarmRoutePosition } = require("./loopFarm");
@@ -134,8 +135,8 @@ async function bot() {
           } else {
             if (
               detector_points &&
-              !detector_points.find(
-                (point) => point.tagname === "enemy_hp_finish"
+              detector_points.find(
+                (point) => point.tagname === "hp"
               ).locations.length > 0
             ) {
               console.log("atk_2");
@@ -143,9 +144,21 @@ async function bot() {
             }
           }
         }
+
         workerProcess.postMessage({ execRun: true });
         await sleep(6);
         workerProcess.postMessage({ execRun: false });
+
+        if (
+          detector_points && (
+            detector_points.find((point) => point.tagname === "new_atk").locations
+              .length > 0 ||
+            detector_points.find((point) => point.tagname === "cancel_btn_new_atk").locations
+              .length > 0
+          )
+        ) {
+          await skipNewAtk();
+        }
 
         if (configs.skip_evoluttion) {
           if (
