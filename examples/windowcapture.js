@@ -1,13 +1,12 @@
-const WindowCapture = require("./src/Classes/WindowCapture");
+const WindowCapture = require("../src/Classes/WindowCapture");
 const cv = require("opencv4nodejs");
-
-
 
 // 0x1905fe PokeMMO
 // 0x1905fe PokeMMO
 // const wincap = new WindowCapture("Calculadora\0");
-const wincap = new WindowCapture("PokeMMO\0");
-
+// const wincap = new WindowCapture("PokeMMO\0");
+// const wincap = new WindowCapture("?ok??MO\0");
+const wincap = new WindowCapture("PokeMO\0");
 
 // wincap.print();
 

@@ -96,12 +96,8 @@ async function bot() {
         console.log("BOT_STAGES.FARMING");
         for (let num of Array.from(Array(22).keys())) {
           if (num > routePosition) {
-            console.log("step", num);
-            console.time("stp");
             routePosition = num;
             await loopFarmRoutePosition(routePosition);
-            console.timeEnd("stp");
-            console.log("end step", num);
           }
           if (
             detector_points &&
@@ -109,13 +105,12 @@ async function bot() {
             detector_points.find((point) => point.tagname === "hp").locations
               .length > 0
           ) {
-            workerProcess.postMessage({ execRun: false });
+            // workerProcess.postMessage({ execRun: false });
             bot_stage = BOT_STAGES.BATTLE;
             break;
           }
         }
         routePosition = -1;
-        console.log("end loop");
         break;
       case BOT_STAGES.BATTLE:
         console.log("BOT_STAGES.BATTLE");
@@ -145,9 +140,9 @@ async function bot() {
           }
         }
 
-        workerProcess.postMessage({ execRun: true });
+        // workerProcess.postMessage({ execRun: true });
         await sleep(6);
-        workerProcess.postMessage({ execRun: false });
+        // workerProcess.postMessage({ execRun: false });
 
         if (
           detector_points && (
@@ -160,7 +155,7 @@ async function bot() {
           await skipNewAtk();
         }
 
-        if (configs.skip_evoluttion) {
+        if (configs.skip_evolution) {
           if (
             detector_points && (
               detector_points.find((point) => point.tagname === "cancel_btn_evolution").locations

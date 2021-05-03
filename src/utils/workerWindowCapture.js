@@ -49,12 +49,12 @@ const detection_objects = [
   {
     path: "./images/battledetect/evolution.jpg",
     tagname: "evolution",
-    threshold: 0.995,
+    threshold: 0.98,
   },
   {
     path: "./images/battledetect/cancel_btn_evolution.jpg",
     tagname: "cancel_btn_evolution",
-    threshold: 0.98,
+    threshold: 0.94,
   },
   {
     path: "./images/battledetect/new_atk.jpg",

@@ -2,13 +2,13 @@ const cv = require("opencv4nodejs");
 
 async function run() {
   const screenshot = await cv.imreadAsync(
-    "./images/hd/single_battle_2.jpg",
+    "./images/hd/evolution_2.jpg",
     cv.IMREAD_UNCHANGED
   );
 
-  const threshold = 0.94;
+  const threshold = 0.98;
   const needle = await cv.imreadAsync(
-    "./images/battledetect/my_hp.jpg",
+    "./images/battledetect/cancel_btn_evolution.jpg",
     cv.IMREAD_UNCHANGED
   );
 
@@ -41,14 +41,14 @@ async function run() {
     });
 
     const needle2 = await cv.imreadAsync(
-      "./images/battledetect/horder.jpg",
+      "./images/battledetect/evolution.jpg",
       cv.IMREAD_UNCHANGED
     );
 
     const matched2 = screenshot.matchTemplate(needle2, cv.TM_CCOEFF_NORMED);
 
     const locations2 = matched2
-      .threshold(0.98, 1, cv.THRESH_BINARY)
+      .threshold(0.94, 1, cv.THRESH_BINARY)
       .convertTo(cv.CV_8U)
       .findNonZero();
 
