@@ -42,7 +42,7 @@ const detection_objects = [
     threshold: 0.94,
   },
   {
-    path: "./images/battledetect/enemy_hp.jpg",
+    path: "./images/battledetect/enemy_hp_2.jpg",
     tagname: "enemy_hp",
     threshold: 0.98,
   },
@@ -75,7 +75,7 @@ const detection_objects = [
     path: "./images/battledetect/enemy_hp_finish.jpg",
     tagname: "enemy_hp_finish",
     threshold: 0.98,
-  },
+  }
 ];
 
 const wincap = new WindowCapture("PokeMMO\0");

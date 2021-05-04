@@ -15,12 +15,15 @@ async function atk(atk_number) {
   if ((atk_number === 1)) {
     await repeat(2, 0.5, async () => await customKeyTap(configs.keys.button_z));
   } else if ((atk_number === 2)) {
+    await customKeyTap(configs.keys.button_z);
     await customKeyTap(configs.keys.right);
     await customKeyTap(configs.keys.button_z);
   } else if ((atk_number === 3)) {
+    await customKeyTap(configs.keys.button_z);
     await customKeyTap(configs.keys.down);
     await customKeyTap(configs.keys.button_z);
   } else if ((atk_number === 4)) {
+    await customKeyTap(configs.keys.button_z);
     await customKeyTap(configs.keys.down);
     await customKeyTap(configs.keys.right);
     await customKeyTap(configs.keys.button_z);

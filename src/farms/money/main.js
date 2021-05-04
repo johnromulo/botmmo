@@ -83,6 +83,7 @@ async function bot() {
         console.log("BOT_STAGES.CENTER");
         await healCenter();
         await exitCenter();
+        pp = configs.amount_uses.pp;
         bot_stage = BOT_STAGES.GO_TO_FARM;
         break;
       case BOT_STAGES.GO_TO_FARM:
@@ -124,25 +125,28 @@ async function bot() {
           bot_stage = BOT_STAGES.BATTLE_OUT;
         } else {
           if (atk_qt === 0) {
-            escape_battle = false;
             console.log("atk_1");
             await atk(1);
+            pp--;
           } else {
             if (
               detector_points &&
               detector_points.find(
                 (point) => point.tagname === "hp"
+              ).locations.length > 0 &&
+              detector_points.find(
+                (point) => point.tagname === "enemy_hp"
               ).locations.length > 0
             ) {
               console.log("atk_2");
-              await atk(2);
+              await atk(3);
             }
           }
         }
 
         // workerProcess.postMessage({ execRun: true });
         // workerProcess.postMessage({ execRun: false });
-        await sleep(3);
+        // await sleep(3);
 
         if (configs.skip_evolution) {
           if (
@@ -158,7 +162,7 @@ async function bot() {
           }
         }
 
-        await sleep(6);
+        // await sleep(6);
 
         if (
           detector_points && (
@@ -184,16 +188,13 @@ async function bot() {
         break;
       case BOT_STAGES.BATTLE_OUT:
         console.log("BOT_STAGES.BATTLE_OUT");
-        if (!escape_battle) {
-          pp--;
-        }
         atk_qt = 0;
         console.log(`restam ${pp}s`);
         bot_stage = BOT_STAGES.REST_TIME;
       case BOT_STAGES.REST_TIME:
         console.log("BOT_STAGES.REST_TIME");
         await restTime();
-        if (pp === 0) {
+        if (pp <= 0) {
           bot_stage = BOT_STAGES.START;
         } else {
           workerProcess.postMessage({ execRun: true });
@@ -221,7 +222,7 @@ async function run() {
 async function init() {
   createNewProcess();
   console.log("init");
-  await sleep(15);
+  await sleep(5);
   console.log("run");
   run();
 }

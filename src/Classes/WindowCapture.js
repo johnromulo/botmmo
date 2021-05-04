@@ -1,4 +1,6 @@
 const { K, U } = require("win32-api");
+var ref = require("ref-napi");
+var ffi = require("ffi-napi");
 const robot = require("robotjs");
 let Jimp = require("jimp");
 
@@ -38,6 +40,46 @@ function colorNormalize(robotScreenPic) {
   });
 }
 
+function changeNameWindow() {
+  var voidPtr = ref.refType(ref.types.void);
+  var stringPtr = ref.refType(ref.types.CString);
+
+  var user32local = ffi.Library("user32.dll", {
+    EnumWindows: ["bool", [voidPtr, "int32"]],
+    GetWindowTextA: ["long", ["long", stringPtr, "long"]],
+  });
+
+  windowProc = ffi.Callback("bool", ["long", "int32"], function (hwnd, lParam) {
+    var buf, name, ret;
+    buf = new Buffer(255);
+    ret = user32local.GetWindowTextA(hwnd, buf, 255);
+    name = ref.readCString(buf, 0);
+    let originalTitle = "PokeMMO";
+    if (name.length === 7) {
+      for (let num of Array.from(Array(name.length).keys())) {
+        if (name[num] === "?") {
+          // console.log("index", num);
+          name = name.substring(0, num) + originalTitle[num] + name.substring(num + 1);
+        }
+      }
+      if (originalTitle === name) {
+        const res = user32.SetWindowTextW(hwnd, Buffer.from('PokeMMO', 'ucs2'))
+        // if (!res) {
+        //   console.log('SetWindowTextW failed')
+        // }
+        // else {
+        //   console.log('window title changed')
+        // }
+        // console.log("true")
+      }
+      // console.log("name", name);
+      // console.log("originalTitle", originalTitle);
+    }
+    return true;
+  });
+  user32local.EnumWindows(windowProc, 0);
+}
+
 class WindowCapture {
   hwnd = null;
   w = 0;
@@ -48,6 +90,7 @@ class WindowCapture {
   offset_y = 0;
 
   constructor(title) {
+    changeNameWindow();
     const lpszWindow = Buffer.from(title, "ucs2");
     this.hwnd = user32.FindWindowExW(0, 0, null, lpszWindow);
 
