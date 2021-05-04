@@ -141,19 +141,8 @@ async function bot() {
         }
 
         // workerProcess.postMessage({ execRun: true });
-        await sleep(6);
         // workerProcess.postMessage({ execRun: false });
-
-        if (
-          detector_points && (
-            detector_points.find((point) => point.tagname === "new_atk").locations
-              .length > 0 ||
-            detector_points.find((point) => point.tagname === "cancel_btn_new_atk").locations
-              .length > 0
-          )
-        ) {
-          await skipNewAtk();
-        }
+        await sleep(3);
 
         if (configs.skip_evolution) {
           if (
@@ -164,8 +153,23 @@ async function bot() {
                 .length > 0
             )
           ) {
+            console.log("skipEvolution");
             await skipEvolution();
           }
+        }
+
+        await sleep(6);
+
+        if (
+          detector_points && (
+            detector_points.find((point) => point.tagname === "new_atk").locations
+              .length > 0 ||
+            detector_points.find((point) => point.tagname === "cancel_btn_new_atk").locations
+              .length > 0
+          )
+        ) {
+          console.log("skipNewAtk");
+          await skipNewAtk();
         }
 
         if (
@@ -200,7 +204,6 @@ async function bot() {
       default:
         break;
     }
-    console.log("bot run out");
     runbot = false;
   }
 }
