@@ -37,7 +37,7 @@ const detection_objects = [
     threshold: 0.98,
   },
   {
-    path: "./images/battledetect/my_hp.jpg",
+    path: "./images/battledetect/my_hp_2.jpg",
     tagname: "hp",
     threshold: 0.94,
   },
