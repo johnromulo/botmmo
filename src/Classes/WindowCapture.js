@@ -59,11 +59,14 @@ function changeNameWindow() {
       for (let num of Array.from(Array(name.length).keys())) {
         if (name[num] === "?") {
           // console.log("index", num);
-          name = name.substring(0, num) + originalTitle[num] + name.substring(num + 1);
+          name =
+            name.substring(0, num) +
+            originalTitle[num] +
+            name.substring(num + 1);
         }
       }
       if (originalTitle === name) {
-        const res = user32.SetWindowTextW(hwnd, Buffer.from('PokeMMO', 'ucs2'))
+        const res = user32.SetWindowTextW(hwnd, Buffer.from("PokeMMO", "ucs2"));
         // if (!res) {
         //   console.log('SetWindowTextW failed')
         // }
@@ -154,6 +157,10 @@ class WindowCapture {
 
     const screenshot = await colorNormalize(pic);
     return screenshot;
+  }
+
+  sendKey(key) {
+    user32.SendMessageW(this.hwnd);
   }
 }
 
